@@ -40,6 +40,7 @@ type User struct {
 
 	OrganizedEvents   []Event
 	OrganizedMeetings []Meeting
+	Invites           []Invite
 }
 
 type Event struct {
@@ -77,4 +78,5 @@ type Invite struct {
 	Status Status
 
 	MeetingID int
+	InviteeID uint
 }
