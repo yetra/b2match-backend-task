@@ -20,6 +20,8 @@ type Company struct {
 	Name     string
 	Location string
 	About    string
+
+	Users []User
 }
 
 type User struct {
@@ -33,6 +35,8 @@ type User struct {
 
 	EMail    string
 	Password string
+
+	CompanyID int
 }
 
 type Event struct {
