@@ -67,10 +67,14 @@ type Meeting struct {
 
 	EventID     int
 	OrganizerID int
+
+	Invites []Invite
 }
 
 type Invite struct {
 	gorm.Model
 
 	Status Status
+
+	MeetingID int
 }
