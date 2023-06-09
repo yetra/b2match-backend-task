@@ -38,7 +38,8 @@ type User struct {
 
 	CompanyID int
 
-	OrganizedEvents []Event
+	OrganizedEvents   []Event
+	OrganizedMeetings []Meeting
 }
 
 type Event struct {
@@ -61,6 +62,8 @@ type Meeting struct {
 	EndTime   time.Time
 
 	Scheduled bool
+
+	OrganizerID int
 }
 
 type Invite struct {
