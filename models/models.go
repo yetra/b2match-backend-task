@@ -38,9 +38,9 @@ type User struct {
 
 	CompanyID int
 
-	OrganizedEvents   []Event
-	OrganizedMeetings []Meeting
-	Invites           []Invite
+	OrganizedEvents   []Event   `gorm:"foreignKey:OrganizerID"`
+	OrganizedMeetings []Meeting `gorm:"foreignKey:OrganizerID"`
+	Invites           []Invite  `gorm:"foreignKey:InviteeID"`
 }
 
 type Event struct {
