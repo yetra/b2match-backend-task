@@ -36,7 +36,7 @@ type User struct {
 	EMail    string
 	Password string
 
-	CompanyID int
+	CompanyID uint
 
 	OrganizedEvents   []Event   `gorm:"foreignKey:OrganizerID"`
 	OrganizedMeetings []Meeting `gorm:"foreignKey:OrganizerID"`
@@ -53,7 +53,7 @@ type Event struct {
 	StartDate time.Time
 	EndDate   time.Time
 
-	OrganizerID int
+	OrganizerID uint
 
 	Participants []User `gorm:"many2many:event_participants;"`
 	Meetings     []Meeting
@@ -67,8 +67,8 @@ type Meeting struct {
 
 	Scheduled bool
 
-	EventID     int
-	OrganizerID int
+	EventID     uint
+	OrganizerID uint
 
 	Invites []Invite
 }
@@ -78,6 +78,6 @@ type Invite struct {
 
 	Status Status
 
-	MeetingID int
+	MeetingID uint
 	InviteeID uint
 }
