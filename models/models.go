@@ -55,7 +55,8 @@ type Event struct {
 
 	OrganizerID int
 
-	Meetings []Meeting
+	Participants []User `gorm:"many2many:event_participants;"`
+	Meetings     []Meeting
 }
 
 type Meeting struct {
