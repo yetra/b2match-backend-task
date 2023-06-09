@@ -6,6 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
+type Status int
+
+const (
+	Pending  Status = iota
+	Accepted Status = iota
+	Declined Status = iota
+)
+
 type Company struct {
 	gorm.Model
 
@@ -50,5 +58,5 @@ type Meeting struct {
 type Invite struct {
 	gorm.Model
 
-	Status string
+	Status Status
 }
