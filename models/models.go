@@ -53,6 +53,8 @@ type Event struct {
 	EndDate   time.Time
 
 	OrganizerID int
+
+	Meetings []Meeting
 }
 
 type Meeting struct {
@@ -63,6 +65,7 @@ type Meeting struct {
 
 	Scheduled bool
 
+	EventID     int
 	OrganizerID int
 }
 
