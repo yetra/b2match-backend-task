@@ -37,6 +37,8 @@ type User struct {
 	Password string
 
 	CompanyID int
+
+	OrganizedEvents []Event
 }
 
 type Event struct {
@@ -48,6 +50,8 @@ type Event struct {
 
 	StartDate time.Time
 	EndDate   time.Time
+
+	OrganizerID int
 }
 
 type Meeting struct {
