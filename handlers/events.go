@@ -26,7 +26,7 @@ type joinEventJSON struct {
 // GET /events
 func FindEvents(c *gin.Context) {
 	var events []models.Event
-	database.DB.Find(&events)
+	database.DB.Preload("Participants").Find(&events)
 
 	c.JSON(http.StatusOK, gin.H{"events": events})
 }
@@ -37,7 +37,7 @@ func FindEventByID(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if err := database.DB.First(&event, id).Error; err != nil {
+	if err := database.DB.Preload("Participants").First(&event, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
@@ -67,27 +67,6 @@ func CreateEvent(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"event": event})
-}
-
-// GET /events/:id/participants
-func FindEventParticipants(c *gin.Context) {
-	var event models.Event
-	var participants []models.User
-
-	id := c.Param("id")
-
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	err := database.DB.Model(&event).Association("Participants").Find(&participants)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"participants": participants})
 }
 
 // POST /events/:id/join

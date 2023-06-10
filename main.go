@@ -16,8 +16,6 @@ func main() {
 	route.GET("/companies/:id", handlers.FindCompanyByID)
 	route.POST("/companies", handlers.CreateCompany)
 
-	route.GET("/companies/:id/representatives", handlers.FindCompanyRepresentatives)
-
 	route.GET("/users", handlers.FindUsers)
 	route.GET("/users/:id", handlers.FindUserByID)
 	route.POST("/users", handlers.CreateUser)
@@ -25,8 +23,6 @@ func main() {
 	route.GET("/events", handlers.FindEvents)
 	route.GET("/events/:id", handlers.FindEventByID)
 	route.POST("/events", handlers.CreateUser)
-
-	route.GET("/events/:id/participants", handlers.FindEventParticipants)
 
 	route.POST("/events/:id/join", handlers.JoinEvent)
 
