@@ -38,7 +38,7 @@ func FindEventByID(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -62,7 +62,7 @@ func CreateEvent(c *gin.Context) {
 		EndDate:   newEvent.EndDate,
 	}
 	if err := database.DB.Create(&event).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

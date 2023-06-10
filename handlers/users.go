@@ -35,7 +35,7 @@ func FindUserByID(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := database.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -60,7 +60,7 @@ func CreateUser(c *gin.Context) {
 		Password:  newUser.Password,
 	}
 	if err := database.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

@@ -30,7 +30,7 @@ func FindCompanyByID(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := database.DB.First(&company, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -52,7 +52,7 @@ func CreateCompany(c *gin.Context) {
 		About:    newCompany.About,
 	}
 	if err := database.DB.Create(&company).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
