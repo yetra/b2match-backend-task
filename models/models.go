@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Status int
@@ -15,7 +13,7 @@ const (
 )
 
 type Company struct {
-	gorm.Model
+	ID uint `gorm:"primaryKey"`
 
 	Name     string
 	Location string
@@ -25,7 +23,7 @@ type Company struct {
 }
 
 type User struct {
-	gorm.Model
+	ID uint `gorm:"primaryKey"`
 
 	FirstName string
 	LastName  string
@@ -44,7 +42,7 @@ type User struct {
 }
 
 type Event struct {
-	gorm.Model
+	ID uint `gorm:"primaryKey"`
 
 	Name     string
 	Location string
@@ -60,7 +58,7 @@ type Event struct {
 }
 
 type Meeting struct {
-	gorm.Model
+	ID uint `gorm:"primaryKey"`
 
 	StartTime time.Time
 	EndTime   time.Time
@@ -74,7 +72,7 @@ type Meeting struct {
 }
 
 type Invite struct {
-	gorm.Model
+	ID uint `gorm:"primaryKey"`
 
 	Status Status
 
