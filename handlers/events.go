@@ -12,7 +12,7 @@ import (
 
 type newEventJSON struct {
 	Name     string `binding:"required"`
-	Location string `binding:"required"`
+	Location string
 	Agenda   string
 
 	StartDate time.Time `binding:"required,ltefield=EndDate" json:"start_date"`
