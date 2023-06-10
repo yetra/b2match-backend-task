@@ -11,8 +11,8 @@ import (
 )
 
 type newMeetingJSON struct {
-	StartTime time.Time `binding:"required,ltefield=EndTime" json:"start_time" time_format:"2006-01-02"`
-	EndTime   time.Time `binding:"required" json:"end_time" time_format:"2006-01-02"`
+	StartTime time.Time `binding:"required,ltefield=EndTime" json:"start_time"`
+	EndTime   time.Time `binding:"required" json:"end_time"`
 
 	OrganizerID uint `binding:"required" json:"organizer_id"`
 }
