@@ -17,22 +17,14 @@ type rsvpJSON struct {
 	Response models.Status `binding:"required,min=1,max=2" json:"response"`
 }
 
-// GET /event/:id/meetings/:meeting_id/invites
+// GET /meetings/:id/invites
 func FindMeetingInvites(c *gin.Context) {
-	var event models.Event
 	var meeting models.Meeting
 	var invites []models.Invite
 
 	id := c.Param("id")
 
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	meeting_id := c.Param("meeting_id")
-
-	if err := database.DB.First(&meeting, meeting_id).Error; err != nil {
+	if err := database.DB.First(&meeting, id).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -46,7 +38,7 @@ func FindMeetingInvites(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"invites": invites})
 }
 
-// POST /events/:id/meetings/:meeting_id/invites
+// POST /meetings/:id/invites
 func CreateMeetingInvite(c *gin.Context) {
 	var inviteData newInviteJSON
 
@@ -55,20 +47,11 @@ func CreateMeetingInvite(c *gin.Context) {
 		return
 	}
 
-	var event models.Event
+	var meeting models.Meeting
 
 	id := c.Param("id")
 
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	var meeting models.Meeting
-
-	meeting_id := c.Param("meeting_id")
-
-	if err := database.DB.First(&meeting, meeting_id).Error; err != nil {
+	if err := database.DB.First(&meeting, id).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -95,7 +78,7 @@ func CreateMeetingInvite(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"invite": invite})
 }
 
-// POST /event/:id/meetings/:meeting_id/invites/:invite_id/rsvp
+// POST /meetings/:id/invites/:invite_id/rsvp
 func RespondToInvite(c *gin.Context) {
 	var responseData rsvpJSON
 
@@ -104,20 +87,11 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	var event models.Event
-
-	id := c.Param("id")
-
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
 	var meeting models.Meeting
 
-	meeting_id := c.Param("meeting_id")
+	id := c.Param("meeting_id")
 
-	if err := database.DB.First(&meeting, meeting_id).Error; err != nil {
+	if err := database.DB.First(&meeting, id).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
