@@ -40,20 +40,13 @@ func FindEventMeetings(c *gin.Context) {
 
 // GET /event/:id/meetings/:meeting_id
 func FindEventMeetingByID(c *gin.Context) {
-	var event models.Event
-
-	id := c.Param("id")
-
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
 	var meeting models.Meeting
 
-	meeting_id := c.Param("id")
+	id := c.Param("id")
+	meeting_id := c.Param("meeting_id")
 
-	if err := database.DB.First(&meeting, meeting_id).Error; err != nil {
+	err := database.DB.Where("EventID = ?", id).First(&meeting, meeting_id).Error
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
