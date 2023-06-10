@@ -10,8 +10,8 @@ import (
 )
 
 type newCompanyJSON struct {
-	Name     string
-	Location string
+	Name     string `binding:"required"`
+	Location string `binding:"required"`
 	About    string
 }
 
