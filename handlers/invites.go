@@ -14,7 +14,7 @@ type newInviteJSON struct {
 }
 
 type rsvpJSON struct {
-	Response models.Status `binding:"required,min=1,max=2" json:"response"`
+	Status models.Status `binding:"required,min=1,max=2" json:"status"`
 }
 
 // GET /meetings/:id/invites
@@ -128,7 +128,7 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	err := database.DB.Model(&invite).Update("Status", responseData.Response).Error
+	err := database.DB.Model(&invite).Update("Status", responseData.Status).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
