@@ -38,6 +38,7 @@ func FindEventMeetings(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"meetings": meetings})
 }
 
+// POST /events/:id/meetings
 func CreateEventMeeting(c *gin.Context) {
 	var newMeeting newMeetingJSON
 
