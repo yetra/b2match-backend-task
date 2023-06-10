@@ -67,7 +67,7 @@ func CreateUser(c *gin.Context) {
 		About:     newUser.About,
 		EMail:     newUser.EMail,
 		Password:  newUser.Password,
-		CompanyID: newUser.CompanyID,
+		CompanyID: company.ID,
 	}
 
 	if err := database.DB.Create(&user).Error; err != nil {
