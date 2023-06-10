@@ -15,8 +15,8 @@ const (
 type Company struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 
-	Name     string `json:"name"`
-	Location string `json:"location"`
+	Name     string `gorm:"not null" json:"name"`
+	Location string `gorm:"not null" json:"location"`
 	About    string `json:"about"`
 
 	Representatives []User `json:"representatives"`
@@ -25,14 +25,14 @@ type Company struct {
 type User struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
+	FirstName string `gorm:"not null" json:"first_name"`
+	LastName  string `gorm:"not null" json:"last_name"`
 
 	Location string `json:"location"`
 	About    string `json:"about"`
 
-	EMail    string `json:"e_mail"`
-	Password string `json:"password"`
+	EMail    string `gorm:"not null;unique" json:"e_mail"`
+	Password string `gorm:"not null" json:"password"`
 
 	CompanyID uint `json:"company_id"`
 
@@ -44,12 +44,12 @@ type User struct {
 type Event struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 
-	Name     string `json:"name"`
+	Name     string `gorm:"not null" json:"name"`
 	Location string `json:"location"`
 	Agenda   string `json:"agenda"`
 
-	StartDate time.Time `json:"start_date"`
-	EndDate   time.Time `json:"end_date"`
+	StartDate time.Time `gorm:"not null" json:"start_date"`
+	EndDate   time.Time `gorm:"not null" json:"end_date"`
 
 	OrganizerID uint `json:"organizer_id"`
 
@@ -60,13 +60,13 @@ type Event struct {
 type Meeting struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 
-	StartTime time.Time `json:"start_time"`
-	EndTime   time.Time `json:"end_time"`
+	StartTime time.Time `gorm:"not null" json:"start_time"`
+	EndTime   time.Time `gorm:"not null" json:"end_time"`
 
-	Scheduled bool `json:"scheduled"`
+	Scheduled bool `gorm:"not null;default:false" json:"scheduled"`
 
-	EventID     uint `json:"event_id"`
-	OrganizerID uint `json:"organizer_id"`
+	EventID     uint `gorm:"not null" json:"event_id"`
+	OrganizerID uint `gorm:"not null" json:"organizer_id"`
 
 	Invites []Invite `json:"invites"`
 }
@@ -74,8 +74,8 @@ type Meeting struct {
 type Invite struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 
-	Status Status `json:"status"`
+	Status Status `gorm:"not null;default:0" json:"status"`
 
-	MeetingID uint `json:"meeting_id"`
-	InviteeID uint `json:"invitee_id"`
+	MeetingID uint `gorm:"not null" json:"meeting_id"`
+	InviteeID uint `gorm:"not null" json:"invitee_id"`
 }
