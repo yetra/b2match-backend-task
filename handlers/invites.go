@@ -40,20 +40,13 @@ func FindMeetingInvites(c *gin.Context) {
 
 // GET /meetings/:id/invites/:invite_id
 func FindMeetingInviteByID(c *gin.Context) {
-	var meeting models.Meeting
-
-	id := c.Param("id")
-
-	if err := database.DB.First(&meeting, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
 	var invite models.Invite
 
+	id := c.Param("id")
 	invite_id := c.Param("invite_id")
 
-	if err := database.DB.First(&invite, invite_id).Error; err != nil {
+	err := database.DB.Where("MeetingID = ?", id).First(&invite, invite_id).Error
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
