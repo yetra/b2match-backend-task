@@ -13,6 +13,10 @@ type newInviteJSON struct {
 	InviteeID uint `binding:"required" json:"invitee_id"`
 }
 
+type rsvpJSON struct {
+	Response models.Status `binding:"required,min=1,max=2" json:"response"`
+}
+
 // GET /event/:id/meetings/:meeting_id/invites
 func FindMeetingInvites(c *gin.Context) {
 	var event models.Event
@@ -89,4 +93,49 @@ func CreateMeetingInvite(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"invite": invite})
+}
+
+// POST /event/:id/meetings/:meeting_id/invites/:invite_id/rsvp
+func RespondToInvite(c *gin.Context) {
+	var responseData rsvpJSON
+
+	if err := c.ShouldBindJSON(&responseData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var event models.Event
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&event, id).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var meeting models.Meeting
+
+	meeting_id := c.Param("meeting_id")
+
+	if err := database.DB.First(&meeting, meeting_id).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var invite models.Invite
+
+	invite_id := c.Param("invite_id")
+
+	if err := database.DB.First(&invite, invite_id).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := database.DB.Model(&invite).Update("Status", responseData.Response).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }
