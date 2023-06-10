@@ -37,7 +37,7 @@ type User struct {
 	CompanyID uint `json:"company_id"`
 
 	OrganizedMeetings []Meeting `gorm:"foreignKey:OrganizerID" json:"organized_meetings"`
-	Invites           []Invite  `gorm:"foreignKey:InviteeID" json:"invites"`
+	Invites           []Invite  `gorm:"foreignKey:InviteeID" json:"-"`
 }
 
 type Event struct {
@@ -51,7 +51,7 @@ type Event struct {
 	EndDate   time.Time `gorm:"not null" json:"end_date"`
 
 	Participants []User    `gorm:"many2many:event_participants;" json:"participants"`
-	Meetings     []Meeting `json:"meetings"`
+	Meetings     []Meeting `json:"-"`
 }
 
 type Meeting struct {
@@ -65,7 +65,7 @@ type Meeting struct {
 	EventID     uint `gorm:"not null" json:"event_id"`
 	OrganizerID uint `gorm:"not null" json:"organizer_id"`
 
-	Invites []Invite `json:"invites"`
+	Invites []Invite `json:"-"`
 }
 
 type Invite struct {
