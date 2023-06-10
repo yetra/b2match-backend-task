@@ -38,6 +38,29 @@ func FindMeetingInvites(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"invites": invites})
 }
 
+// GET /meetings/:id/invites/:invite_id
+func FindMeetingInviteByID(c *gin.Context) {
+	var meeting models.Meeting
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&meeting, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	var invite models.Invite
+
+	invite_id := c.Param("invite_id")
+
+	if err := database.DB.First(&invite, invite_id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"invite": invite})
+}
+
 // POST /meetings/:id/invites
 func CreateMeetingInvite(c *gin.Context) {
 	var inviteData newInviteJSON

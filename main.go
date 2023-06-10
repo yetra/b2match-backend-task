@@ -31,9 +31,11 @@ func main() {
 	route.POST("/events/:id/join", handlers.JoinEvent)
 
 	route.GET("/events/:id/meetings", handlers.FindEventMeetings)
+	route.GET("/events/:id/meetings/:meeting_id", handlers.FindEventMeetingByID)
 	route.POST("/events/:id/meetings", handlers.CreateEventMeeting)
 
 	route.GET("/meetings/:id/invites", handlers.FindMeetingInvites)
+	route.GET("/meetings/:id/invites/:invite_id", handlers.FindMeetingInviteByID)
 	route.POST("/meetings/:id/invites", handlers.CreateMeetingInvite)
 
 	route.POST("/meetings/id/invites/:invites_id/rsvp", handlers.RespondToInvite)
