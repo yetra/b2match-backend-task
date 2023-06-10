@@ -1,13 +1,9 @@
 package main
 
 import (
-	"b2match/backend/models"
+	"b2match/backend/database"
 )
 
 func main() {
-	_, err := models.SetUpDatabase()
-
-	if err != nil {
-		panic("failed to connect to database")
-	}
+	database.SetUpDB()
 }

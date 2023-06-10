@@ -3,7 +3,6 @@ package models
 import (
 	"time"
 
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -81,21 +80,4 @@ type Invite struct {
 
 	MeetingID uint
 	InviteeID uint
-}
-
-func SetUpDatabase() (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open("b2match.db"), &gorm.Config{})
-
-	if err != nil {
-		return nil, err
-	}
-
-	// Migrate the schema
-	db.AutoMigrate(&Company{})
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Event{})
-	db.AutoMigrate(&Meeting{})
-	db.AutoMigrate(&Invite{})
-
-	return db, nil
 }
