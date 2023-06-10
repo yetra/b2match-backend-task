@@ -45,7 +45,7 @@ func FindMeetingInviteByID(c *gin.Context) {
 	id := c.Param("id")
 	invite_id := c.Param("invite_id")
 
-	err := database.DB.Where("MeetingID = ?", id).First(&invite, invite_id).Error
+	err := database.DB.Where("meeting_id = ?", id).First(&invite, invite_id).Error
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
