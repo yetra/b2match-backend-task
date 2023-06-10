@@ -30,3 +30,20 @@ func FindCompanyByID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"company": company})
 }
+
+// POST /companies
+func CreateCompany(c *gin.Context) {
+	var company models.Company
+
+	if err := c.ShouldBindJSON(&company); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := database.DB.Create(&company).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"company": company})
+}
