@@ -19,6 +19,10 @@ type newEventJSON struct {
 	EndDate   time.Time `binding:"required" time_format:"2006-01-02"`
 }
 
+type joinEventJSON struct {
+	ID uint `binding:"required" json:"id"`
+}
+
 // GET /events
 func FindEvents(c *gin.Context) {
 	var events []models.Event
@@ -84,4 +88,36 @@ func FindEventParticipants(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"participants": participants})
+}
+
+// POST /events/:id/join
+func JoinEvent(c *gin.Context) {
+	var event models.Event
+	var joinData joinEventJSON
+	var participant models.User
+
+	id := c.Param("id")
+
+	if err := database.DB.Find(&event, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&joinData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := database.DB.Find(&participant, joinData.ID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := database.DB.Model(&event).Association("Participants").Append(&participant)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"event": event})
 }
