@@ -76,7 +76,7 @@ func FindEventParticipants(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if err := database.DB.Find(&event, id).Error; err != nil {
+	if err := database.DB.First(&event, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
@@ -98,7 +98,7 @@ func JoinEvent(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if err := database.DB.Find(&event, id).Error; err != nil {
+	if err := database.DB.First(&event, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
@@ -108,7 +108,7 @@ func JoinEvent(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Find(&participant, joinData.ID).Error; err != nil {
+	if err := database.DB.First(&participant, joinData.ID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
