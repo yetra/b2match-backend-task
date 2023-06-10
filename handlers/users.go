@@ -25,7 +25,7 @@ type newUserJSON struct {
 // GET /users
 func FindUsers(c *gin.Context) {
 	var users []models.User
-	database.DB.Find(&users)
+	database.DB.Preload("Events").Find(&users)
 
 	c.JSON(http.StatusOK, gin.H{"users": users})
 }
@@ -36,7 +36,7 @@ func FindUserByID(c *gin.Context) {
 
 	id := c.Param("id")
 
-	if err := database.DB.First(&user, id).Error; err != nil {
+	if err := database.DB.Preload("Events").First(&user, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
