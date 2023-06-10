@@ -9,6 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type newCompanyJSON struct {
+	Name     string
+	Location string
+	About    string
+}
+
 // GET /companies
 func FindCompanies(c *gin.Context) {
 	var companies []models.Company
@@ -33,13 +39,18 @@ func FindCompanyByID(c *gin.Context) {
 
 // POST /companies
 func CreateCompany(c *gin.Context) {
-	var company models.Company
+	var newCompany newCompanyJSON
 
-	if err := c.ShouldBindJSON(&company); err != nil {
+	if err := c.ShouldBindJSON(&newCompany); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	company := models.Company{
+		Name:     newCompany.Name,
+		Location: newCompany.Location,
+		About:    newCompany.About,
+	}
 	if err := database.DB.Create(&company).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
