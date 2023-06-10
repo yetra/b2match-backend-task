@@ -58,3 +58,24 @@ func CreateCompany(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"company": company})
 }
+
+// GET /events/:id/representatives
+func FindCompanyRepresentatives(c *gin.Context) {
+	var company models.Company
+	var representatives []models.User
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&company, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := database.DB.Model(&company).Association("Representatives").Find(&representatives)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"representatives": representatives})
+}
