@@ -10,13 +10,13 @@ import (
 )
 
 type newUserJSON struct {
-	FirstName string `binding:"required"`
-	LastName  string `binding:"required"`
+	FirstName string `binding:"required" json:"first_name"`
+	LastName  string `binding:"required" json:"last_name"`
 
 	Location string
 	About    string
 
-	EMail    string `binding:"required"`
+	EMail    string `binding:"required" json:"e_mail"`
 	Password string `binding:"required"`
 }
 
