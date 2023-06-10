@@ -15,7 +15,7 @@ type newEventJSON struct {
 	Location string `binding:"required"`
 	Agenda   string
 
-	StartDate time.Time `binding:"required"`
+	StartDate time.Time `binding:"required,ltefield=EndDate"`
 	EndDate   time.Time `binding:"required"`
 }
 
