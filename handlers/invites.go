@@ -112,7 +112,7 @@ func RespondToInvite(c *gin.Context) {
 
 	var meeting models.Meeting
 
-	id := c.Param("meeting_id")
+	id := c.Param("id")
 
 	if err := database.DB.First(&meeting, id).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
