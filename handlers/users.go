@@ -18,6 +18,8 @@ type newUserJSON struct {
 
 	EMail    string `binding:"required" json:"e_mail"`
 	Password string `binding:"required"`
+
+	CompanyID uint `binding:"required" json:"company_id"`
 }
 
 // GET /users
@@ -51,6 +53,13 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	var company models.Company
+
+	if err := database.DB.First(&company, newUser.CompanyID).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	user := models.User{
 		FirstName: newUser.FirstName,
 		LastName:  newUser.LastName,
@@ -58,7 +67,9 @@ func CreateUser(c *gin.Context) {
 		About:     newUser.About,
 		EMail:     newUser.EMail,
 		Password:  newUser.Password,
+		CompanyID: newUser.CompanyID,
 	}
+
 	if err := database.DB.Create(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
