@@ -10,16 +10,18 @@ import (
 var DB *gorm.DB
 
 func SetUpDB() {
-	DB, err := gorm.Open(sqlite.Open("b2match.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("b2match.db"), &gorm.Config{})
 
 	if err != nil {
 		panic("failed to connect to database")
 	}
 
 	// Migrate the schema
-	DB.AutoMigrate(&models.Company{})
-	DB.AutoMigrate(&models.User{})
-	DB.AutoMigrate(&models.Event{})
-	DB.AutoMigrate(&models.Meeting{})
-	DB.AutoMigrate(&models.Invite{})
+	db.AutoMigrate(&models.Company{})
+	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Event{})
+	db.AutoMigrate(&models.Meeting{})
+	db.AutoMigrate(&models.Invite{})
+
+	DB = db
 }
