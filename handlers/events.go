@@ -119,5 +119,5 @@ func JoinEvent(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"event": event})
+	c.Status(http.StatusCreated)
 }
