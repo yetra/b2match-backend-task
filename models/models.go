@@ -21,7 +21,7 @@ type Company struct {
 	Location string
 	About    string
 
-	Users []User
+	Representatives []User
 }
 
 type User struct {
