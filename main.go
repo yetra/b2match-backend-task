@@ -22,7 +22,7 @@ func main() {
 
 	route.GET("/events", handlers.FindEvents)
 	route.GET("/events/:id", handlers.FindEventByID)
-	route.POST("/events", handlers.CreateUser)
+	route.POST("/events", handlers.CreateEvent)
 
 	route.POST("/events/:id/join", handlers.JoinEvent)
 
