@@ -94,7 +94,7 @@ func CreateMeetingInvite(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"invite": invite})
 }
 
-// PATCH /meetings/:id/invites/:invite_id/rsvp
+// PATCH /invites/:id/rsvp
 func RespondToInvite(c *gin.Context) {
 	var responseData rsvpJSON
 
@@ -103,20 +103,11 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	var meeting models.Meeting
+	var invite models.Invite
 
 	id := c.Param("id")
 
-	if err := database.DB.First(&meeting, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	var invite models.Invite
-
-	invite_id := c.Param("invite_id")
-
-	if err := database.DB.First(&invite, invite_id).Error; err != nil {
+	if err := database.DB.First(&invite, id).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
