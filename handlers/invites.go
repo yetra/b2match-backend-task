@@ -94,7 +94,7 @@ func CreateMeetingInvite(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"invite": invite})
 }
 
-// POST /meetings/:id/invites/:invite_id/rsvp
+// PATCH /meetings/:id/invites/:invite_id/rsvp
 func RespondToInvite(c *gin.Context) {
 	var responseData rsvpJSON
 
