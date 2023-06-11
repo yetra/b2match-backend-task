@@ -96,9 +96,9 @@ func CreateMeetingInvite(c *gin.Context) {
 
 // PATCH /invites/:id/rsvp
 func RespondToInvite(c *gin.Context) {
-	var responseData rsvpJSON
+	var rsvpData rsvpJSON
 
-	if err := c.ShouldBindJSON(&responseData); err != nil {
+	if err := c.ShouldBindJSON(&rsvpData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -112,7 +112,7 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	err := database.DB.Model(&invite).Update("Status", responseData.Status).Error
+	err := database.DB.Model(&invite).Update("Status", rsvpData.Status).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
