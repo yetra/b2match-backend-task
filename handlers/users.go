@@ -77,3 +77,40 @@ func CreateUser(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
+
+// GET /users/:id/meetings
+func FindUserScheduledMeetings(c *gin.Context) {
+	var user models.User
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	var invites []models.Invite
+
+	err := database.DB.Model(&user).Association("Invites").Find(&invites)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	var scheduledMeetings []models.Meeting
+
+	for _, invite := range invites {
+		var meeting models.Meeting
+
+		if err := database.DB.First(&meeting, invite.MeetingID).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		if meeting.Scheduled {
+			scheduledMeetings = append(scheduledMeetings, meeting)
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"meetings": scheduledMeetings})
+}

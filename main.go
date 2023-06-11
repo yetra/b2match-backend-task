@@ -20,6 +20,9 @@ func main() {
 	route.GET("/users/:id", handlers.FindUserByID)
 	route.POST("/users", handlers.CreateUser)
 
+	route.GET("/users/:id/meetings", handlers.FindUserScheduledMeetings)
+	route.GET("/users/:id/invites", handlers.FindUserInvites)
+
 	route.GET("/events", handlers.FindEvents)
 	route.GET("/events/:id", handlers.FindEventByID)
 	route.POST("/events", handlers.CreateEvent)
