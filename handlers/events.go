@@ -72,8 +72,6 @@ func CreateEvent(c *gin.Context) {
 // POST /events/:id/join
 func JoinEvent(c *gin.Context) {
 	var event models.Event
-	var joinData joinEventJSON
-	var user models.User
 
 	id := c.Param("id")
 
@@ -82,10 +80,14 @@ func JoinEvent(c *gin.Context) {
 		return
 	}
 
+	var joinData joinEventJSON
+
 	if err := c.ShouldBindJSON(&joinData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	var user models.User
 
 	if err := database.DB.First(&user, joinData.ID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
