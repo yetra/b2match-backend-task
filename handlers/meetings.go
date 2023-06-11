@@ -93,3 +93,39 @@ func CreateEventMeeting(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"meeting": meeting})
 }
+
+// PATCH /meetings/:id/schedule
+func ScheduleMeeting(c *gin.Context) {
+	var meeting models.Meeting
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&meeting, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	var invites []models.Invite
+
+	err := database.DB.Model(&meeting).Association("Invites").Find(&invites)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	for _, invite := range invites {
+		if invite.Status != models.Accepted {
+			err_message := "Found an invite of status Pending or Rejected."
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err_message})
+			return
+		}
+	}
+
+	err = database.DB.Model(&meeting).Update("Scheduled", true).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusOK)
+}

@@ -34,6 +34,8 @@ func main() {
 	route.GET("/meetings/:id/invites/:invite_id", handlers.FindMeetingInviteByID)
 	route.POST("/meetings/:id/invites", handlers.CreateMeetingInvite)
 
+	route.PATCH("/meetings/:id/schedule", handlers.ScheduleMeeting)
+
 	route.PATCH("/invites/:id/rsvp", handlers.RespondToInvite)
 
 	route.Run(":8085")
