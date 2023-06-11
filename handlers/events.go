@@ -61,6 +61,7 @@ func CreateEvent(c *gin.Context) {
 		StartDate: newEvent.StartDate,
 		EndDate:   newEvent.EndDate,
 	}
+
 	if err := database.DB.Create(&event).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
