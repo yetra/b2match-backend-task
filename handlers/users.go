@@ -22,6 +22,16 @@ type newUserJSON struct {
 	CompanyID uint `binding:"required" json:"company_id"`
 }
 
+type updateUserJSON struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+
+	Location string
+	About    string
+
+	Password string
+}
+
 // GET /users
 func FindUsers(c *gin.Context) {
 	var users []models.User
@@ -135,4 +145,30 @@ func FindUserInvites(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"invites": invites})
+}
+
+// PATCH /users/:id
+func UpdateUser(c *gin.Context) {
+	var user models.User
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&user, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	var updatedUser updateUserJSON
+
+	if err := c.ShouldBindJSON(&updatedUser); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := database.DB.Model(&user).Updates(&updatedUser).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"user": user})
 }
