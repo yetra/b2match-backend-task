@@ -1,9 +1,6 @@
 package handlers
 
 import (
-	"net/http"
-
-	"b2match/backend/database"
 	"b2match/backend/models"
 
 	"github.com/gin-gonic/gin"
@@ -71,11 +68,5 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	err := database.DB.Model(&invite).Update("Status", rsvpData.Status).Error
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.Status(http.StatusNoContent)
+	updateResource(c, &invite, &rsvpData)
 }
