@@ -21,13 +21,13 @@ type updateCompanyJSON struct {
 }
 
 // GET /companies
-func FindCompanies(c *gin.Context) {
-	findResources[models.Company](c)
+func GetCompanies(c *gin.Context) {
+	getResources[models.Company](c)
 }
 
 // GET /companies/:id
-func FindCompanyByID(c *gin.Context) {
-	findResourceByID[models.Company](c)
+func GetCompanyByID(c *gin.Context) {
+	getResourceByID[models.Company](c)
 }
 
 // POST /companies

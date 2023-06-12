@@ -33,13 +33,13 @@ type updateUserJSON struct {
 }
 
 // GET /users
-func FindUsers(c *gin.Context) {
-	findResources[models.User](c)
+func GetUsers(c *gin.Context) {
+	getResources[models.User](c)
 }
 
 // GET /users/:id
-func FindUserByID(c *gin.Context) {
-	findResourceByID[models.User](c)
+func GetUserByID(c *gin.Context) {
+	getResourceByID[models.User](c)
 }
 
 // POST /users
@@ -77,7 +77,7 @@ func CreateUser(c *gin.Context) {
 }
 
 // GET /users/:id/meetings
-func FindUserScheduledMeetings(c *gin.Context) {
+func GetUserScheduledMeetings(c *gin.Context) {
 	var user models.User
 
 	id := c.Param("id")
@@ -114,8 +114,8 @@ func FindUserScheduledMeetings(c *gin.Context) {
 }
 
 // GET /users/:id/invites
-func FindUserInvites(c *gin.Context) {
-	findNestedResources[models.User, models.Invite](c, "Invites")
+func GetUserInvites(c *gin.Context) {
+	getNestedResources[models.User, models.Invite](c, "Invites")
 }
 
 // PATCH /users/:id

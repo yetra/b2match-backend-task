@@ -28,13 +28,13 @@ type joinEventJSON struct {
 }
 
 // GET /events
-func FindEvents(c *gin.Context) {
-	findResources[models.Event](c)
+func GetEvents(c *gin.Context) {
+	getResources[models.Event](c)
 }
 
 // GET /events/:id
-func FindEventByID(c *gin.Context) {
-	findResourceByID[models.Event](c)
+func GetEventByID(c *gin.Context) {
+	getResourceByID[models.Event](c)
 }
 
 // POST /events

@@ -24,7 +24,7 @@ func getTypeName(variable interface{}) string {
 	}
 }
 
-func findResources[R resource](c *gin.Context) {
+func getResources[R resource](c *gin.Context) {
 	var resources []R
 	database.DB.Find(&resources)
 
@@ -33,7 +33,7 @@ func findResources[R resource](c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{resourcesName: resources})
 }
 
-func findNestedResources[R, RNested resource](c *gin.Context, assocName string) {
+func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 	var resource R
 	var nestedResources []RNested
 
@@ -55,7 +55,7 @@ func findNestedResources[R, RNested resource](c *gin.Context, assocName string) 
 	c.JSON(http.StatusOK, gin.H{nestedResourcesName: nestedResources})
 }
 
-func findResourceByID[R resource](c *gin.Context) {
+func getResourceByID[R resource](c *gin.Context) {
 	var resource R
 
 	id := c.Param("id")

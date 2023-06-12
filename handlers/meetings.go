@@ -18,12 +18,12 @@ type newMeetingJSON struct {
 }
 
 // GET /event/:id/meetings
-func FindEventMeetings(c *gin.Context) {
-	findNestedResources[models.Event, models.Meeting](c, "Meetings")
+func GetEventMeetings(c *gin.Context) {
+	getNestedResources[models.Event, models.Meeting](c, "Meetings")
 }
 
 // GET /event/:id/meetings/:meeting_id
-func FindEventMeetingByID(c *gin.Context) {
+func GetEventMeetingByID(c *gin.Context) {
 	var meeting models.Meeting
 
 	id := c.Param("id")

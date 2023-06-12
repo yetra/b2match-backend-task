@@ -18,12 +18,12 @@ type rsvpJSON struct {
 }
 
 // GET /meetings/:id/invites
-func FindMeetingInvites(c *gin.Context) {
-	findNestedResources[models.Meeting, models.Invite](c, "Invites")
+func GetMeetingInvites(c *gin.Context) {
+	getNestedResources[models.Meeting, models.Invite](c, "Invites")
 }
 
 // GET /meetings/:id/invites/:invite_id
-func FindMeetingInviteByID(c *gin.Context) {
+func GetMeetingInviteByID(c *gin.Context) {
 	var invite models.Invite
 
 	id := c.Param("id")
