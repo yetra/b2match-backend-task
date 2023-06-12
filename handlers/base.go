@@ -33,7 +33,7 @@ func findResources[R resource](c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{resourcesName: resources})
 }
 
-func findNestedResources[R resource, RNested resource](c *gin.Context, assocName string) {
+func findNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 	var resource R
 	var nestedResources []RNested
 
@@ -55,8 +55,8 @@ func findNestedResources[R resource, RNested resource](c *gin.Context, assocName
 	c.JSON(http.StatusOK, gin.H{nestedResourcesName: nestedResources})
 }
 
-func findResourceByID[r resource](c *gin.Context) {
-	var resource r
+func findResourceByID[R resource](c *gin.Context) {
+	var resource R
 
 	id := c.Param("id")
 
