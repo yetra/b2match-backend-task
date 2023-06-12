@@ -74,7 +74,7 @@ func JoinEvent(c *gin.Context) {
 
 	err := database.DB.Model(&event).Association("Participants").Append(&participant)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 

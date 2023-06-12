@@ -26,7 +26,7 @@ type inputJSON interface {
 
 func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) error {
 	if err := database.DB.First(resource, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return err
 	}
 
@@ -36,7 +36,7 @@ func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) e
 func findNestedResources[R, RNested resource](c *gin.Context, resource *R, nestedResources *[]RNested, assocName string) error {
 	err := database.DB.Model(&resource).Association(assocName).Find(&nestedResources)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return err
 	}
 
@@ -45,7 +45,7 @@ func findNestedResources[R, RNested resource](c *gin.Context, resource *R, neste
 
 func bindJSON[J inputJSON](c *gin.Context, inputJSON *J) error {
 	if err := c.ShouldBindJSON(&inputJSON); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
 		return err
 	}
 
@@ -84,7 +84,7 @@ func getResourceByID[R resource](c *gin.Context) {
 
 func createResource[R resource](c *gin.Context, resourceModel *R) {
 	if err := database.DB.Create(&resourceModel).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -93,7 +93,7 @@ func createResource[R resource](c *gin.Context, resourceModel *R) {
 
 func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *R, input *J) {
 	if err := database.DB.Model(&resource).Updates(&input).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
