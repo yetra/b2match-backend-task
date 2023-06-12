@@ -14,6 +14,18 @@ type resource interface {
 	models.Company | models.User | models.Event | models.Meeting | models.Invite
 }
 
+type newResourceJSON interface {
+	newCompanyJSON | newUserJSON | newEventJSON | newMeetingJSON | newInviteJSON
+}
+
+type updateResourceJSON interface {
+	updateCompanyJSON | updateUserJSON | updateEventJSON
+}
+
+type inputJSON interface {
+	newResourceJSON | updateResourceJSON | joinEventJSON | rsvpJSON
+}
+
 func getTypeName(variable interface{}) string {
 	t := reflect.TypeOf(variable)
 
@@ -27,6 +39,17 @@ func getTypeName(variable interface{}) string {
 func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) error {
 	if err := database.DB.First(resource, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return err
+	}
+
+	return nil
+}
+
+func bindJSON[J inputJSON](c *gin.Context, inputJSON *J) error {
+	var input J
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return err
 	}
 
