@@ -106,3 +106,14 @@ func createResource[R resource](c *gin.Context, resourceModel *R) {
 
 	c.JSON(http.StatusCreated, gin.H{resourceName: resourceModel})
 }
+
+func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *R, input *J) {
+	if err := database.DB.Model(&resource).Updates(&input).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	resourceName := strings.ToLower(getTypeName(resource))
+
+	c.JSON(http.StatusOK, gin.H{resourceName: resource})
+}
