@@ -95,3 +95,14 @@ func getResourceByID[R resource](c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{resourceName: resource})
 }
+
+func createResource[R resource](c *gin.Context, resourceModel *R) {
+	if err := database.DB.Create(&resourceModel).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	resourceName := strings.ToLower(getTypeName(resourceModel))
+
+	c.JSON(http.StatusCreated, gin.H{resourceName: resourceModel})
+}
