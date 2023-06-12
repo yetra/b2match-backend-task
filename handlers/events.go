@@ -19,6 +19,10 @@ type newEventJSON struct {
 	EndDate   time.Time `binding:"required" json:"end_date"`
 }
 
+type updateEventJSON struct {
+	Agenda string
+}
+
 type joinEventJSON struct {
 	ID uint `binding:"required" json:"id"`
 }
@@ -102,4 +106,30 @@ func JoinEvent(c *gin.Context) {
 	}
 
 	c.Status(http.StatusCreated)
+}
+
+// PATCH /events/:id
+func UpdateEvent(c *gin.Context) {
+	var event models.Event
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&event, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	var updatedEvent updateEventJSON
+
+	if err := c.ShouldBindJSON(&updatedEvent); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := database.DB.Model(&event).Updates(&updatedEvent).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"event": event})
 }
