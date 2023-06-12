@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 
-	"b2match/backend/database"
 	"b2match/backend/models"
 
 	"github.com/gin-gonic/gin"
@@ -79,9 +78,7 @@ func GetUserScheduledMeetings(c *gin.Context) {
 
 	var invites []models.Invite
 
-	err := database.DB.Model(&user).Association("Invites").Find(&invites)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err := findNestedResources(c, &user, &invites, "Invites"); err != nil {
 		return
 	}
 

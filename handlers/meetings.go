@@ -67,9 +67,7 @@ func ScheduleMeeting(c *gin.Context) {
 
 	var invites []models.Invite
 
-	err := database.DB.Model(&meeting).Association("Invites").Find(&invites)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err := findNestedResources(c, &meeting, &invites, "Invites"); err != nil {
 		return
 	}
 
@@ -81,7 +79,7 @@ func ScheduleMeeting(c *gin.Context) {
 		}
 	}
 
-	err = database.DB.Model(&meeting).Update("Scheduled", true).Error
+	err := database.DB.Model(&meeting).Update("Scheduled", true).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
