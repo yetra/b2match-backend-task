@@ -71,6 +71,11 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
+	if err := checkMeetingConflicts(&invite); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
+		return
+	}
+
 	updateResource(c, &invite, &rsvpData)
 }
 
@@ -89,4 +94,33 @@ func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
 	}
 
 	return errors.New("the invitee is not an event participant")
+}
+
+func checkMeetingConflicts(invite *models.Invite) error {
+	var acceptedInvites []models.Invite
+
+	whereClause := "invitee_id = ? AND status = ?"
+	err := database.DB.Find(&acceptedInvites, whereClause, invite.InviteeID, models.Accepted).Error
+	if err != nil {
+		return err
+	}
+
+	var meeting models.Meeting
+	if err := database.DB.First(&meeting, invite.MeetingID).Error; err != nil {
+		return err
+	}
+
+	for _, invite := range acceptedInvites {
+		var acceptedMeeting models.Meeting
+		if err := database.DB.First(&acceptedMeeting, invite.MeetingID).Error; err != nil {
+			return err
+		}
+
+		if meeting.StartTime.Before(acceptedMeeting.EndTime) &&
+			meeting.EndTime.After(acceptedMeeting.StartTime) {
+			return errors.New("this meeting is in conflict with already accepted meetings")
+		}
+	}
+
+	return nil
 }
