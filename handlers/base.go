@@ -32,3 +32,18 @@ func findResources[R resource](c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{resourcesName: resources})
 }
+
+func findResourceByID[r resource](c *gin.Context) {
+	var resource r
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&resource, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	resourceName := strings.ToLower(getTypeName(resource))
+
+	c.JSON(http.StatusOK, gin.H{resourceName: resource})
+}
