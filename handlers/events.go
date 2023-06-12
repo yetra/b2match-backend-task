@@ -100,3 +100,8 @@ func JoinEvent(c *gin.Context) {
 
 	c.Status(http.StatusCreated)
 }
+
+// GET /events/:id/participants
+func GetEventParticipants(c *gin.Context) {
+	getNestedResources[models.Event, models.User](c, "Participants")
+}

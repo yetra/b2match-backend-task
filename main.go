@@ -35,6 +35,8 @@ func main() {
 
 	route.POST("/events/:id/join", handlers.JoinEvent)
 
+	route.GET("/events/:id/participants", handlers.GetEventParticipants)
+
 	route.GET("/events/:id/meetings", handlers.GetEventMeetings)
 	route.POST("/events/:id/meetings", handlers.CreateEventMeeting)
 
