@@ -4,8 +4,6 @@ import (
 	"b2match/backend/database"
 	"b2match/backend/models"
 	"net/http"
-	"reflect"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,16 +22,6 @@ type updateResourceJSON interface {
 
 type inputJSON interface {
 	newResourceJSON | updateResourceJSON | joinEventJSON
-}
-
-func typeName(variable interface{}) string {
-	t := reflect.TypeOf(variable)
-
-	if t.Kind() == reflect.Slice || t.Kind() == reflect.Ptr {
-		return t.Elem().Name()
-	} else {
-		return t.Name()
-	}
 }
 
 func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) error {
@@ -68,9 +56,7 @@ func getResources[R resource](c *gin.Context) {
 	var resources []R
 	database.DB.Find(&resources)
 
-	resourcesName := strings.ToLower(typeName(resources))
-
-	c.JSON(http.StatusOK, gin.H{resourcesName: resources})
+	c.JSON(http.StatusOK, resources)
 }
 
 func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
@@ -84,9 +70,7 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 		return
 	}
 
-	nestedResourcesName := strings.ToLower(typeName(nestedResources))
-
-	c.JSON(http.StatusOK, gin.H{nestedResourcesName: nestedResources})
+	c.JSON(http.StatusOK, nestedResources)
 }
 
 func getResourceByID[R resource](c *gin.Context) {
@@ -95,9 +79,7 @@ func getResourceByID[R resource](c *gin.Context) {
 		return
 	}
 
-	resourceName := strings.ToLower(typeName(resource))
-
-	c.JSON(http.StatusOK, gin.H{resourceName: resource})
+	c.JSON(http.StatusOK, resource)
 }
 
 func createResource[R resource](c *gin.Context, resourceModel *R) {
@@ -106,9 +88,7 @@ func createResource[R resource](c *gin.Context, resourceModel *R) {
 		return
 	}
 
-	resourceName := strings.ToLower(typeName(resourceModel))
-
-	c.JSON(http.StatusCreated, gin.H{resourceName: resourceModel})
+	c.JSON(http.StatusCreated, resourceModel)
 }
 
 func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *R, input *J) {
@@ -117,7 +97,5 @@ func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *
 		return
 	}
 
-	resourceName := strings.ToLower(typeName(resource))
-
-	c.JSON(http.StatusOK, gin.H{resourceName: resource})
+	c.JSON(http.StatusOK, resource)
 }

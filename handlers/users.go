@@ -91,7 +91,7 @@ func GetUserScheduledMeetings(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"meetings": scheduledMeetings})
+	c.JSON(http.StatusOK, scheduledMeetings)
 }
 
 // GET /users/:id/invites
