@@ -13,5 +13,5 @@ type Meeting struct {
 	EventID     uint `gorm:"not null;<-:create" json:"event_id"`
 	OrganizerID uint `gorm:"not null;<-:create" json:"organizer_id" binding:"required"`
 
-	Invites []Invite `json:"-"`
+	Invites []Invite `gorm:"constraint:OnDelete:CASCADE" json:"-"`
 }

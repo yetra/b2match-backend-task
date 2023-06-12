@@ -7,5 +7,5 @@ type Company struct {
 	Location string `gorm:"not null" json:"location"`
 	About    string `json:"about"`
 
-	Representatives []User `json:"representatives"`
+	Representatives []User `gorm:"constraint:OnDelete:CASCADE" json:"representatives"`
 }
