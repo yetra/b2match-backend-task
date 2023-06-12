@@ -18,6 +18,8 @@ func main() {
 	route.PATCH("/companies/:id", handlers.UpdateCompany)
 	route.DELETE("/companies/:id", handlers.DeleteCompany)
 
+	route.GET("/companies/:id/representatives", handlers.GetCompanyRepresentatives)
+
 	route.GET("/users", handlers.GetUsers)
 	route.GET("/users/:id", handlers.GetUserByID)
 	route.POST("/users", handlers.CreateUser)

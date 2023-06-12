@@ -62,3 +62,8 @@ func UpdateCompany(c *gin.Context) {
 func DeleteCompany(c *gin.Context) {
 	deleteResource[models.Company](c)
 }
+
+// GET /company/:id/representatives
+func GetCompanyRepresentatives(c *gin.Context) {
+	getNestedResources[models.Company, models.User](c, "Representatives")
+}
