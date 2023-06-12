@@ -12,6 +12,6 @@ type Event struct {
 	StartDate time.Time `gorm:"not null" json:"start_date" binding:"required,ltefield=EndDate"`
 	EndDate   time.Time `gorm:"not null" json:"end_date" binding:"required"`
 
-	Participants []User    `gorm:"many2many:event_participants;" json:"participants"`
+	Participants []User    `gorm:"many2many:event_participants;" json:"-"`
 	Meetings     []Meeting `gorm:"constraint:OnDelete:CASCADE" json:"-"`
 }
