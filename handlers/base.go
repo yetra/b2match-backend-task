@@ -56,8 +56,7 @@ func findNestedResources[R, RNested resource](c *gin.Context, resource *R, neste
 }
 
 func bindJSON[J inputJSON](c *gin.Context, inputJSON *J) error {
-	var input J
-	if err := c.ShouldBindJSON(&input); err != nil {
+	if err := c.ShouldBindJSON(&inputJSON); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return err
 	}
