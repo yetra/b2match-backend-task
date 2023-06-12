@@ -121,10 +121,5 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Model(&user).Updates(&updatedUser).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	updateResource(c, &user, &updatedUser)
 }

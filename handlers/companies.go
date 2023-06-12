@@ -1,9 +1,6 @@
 package handlers
 
 import (
-	"net/http"
-
-	"b2match/backend/database"
 	"b2match/backend/models"
 
 	"github.com/gin-gonic/gin"
@@ -61,10 +58,5 @@ func UpdateCompany(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Model(&company).Updates(&updatedCompany).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"company": company})
+	updateResource(c, &company, &updatedCompany)
 }

@@ -99,10 +99,5 @@ func UpdateEvent(c *gin.Context) {
 		return
 	}
 
-	if err := database.DB.Model(&event).Updates(&updatedEvent).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"event": event})
+	updateResource(c, &event, &updatedEvent)
 }
