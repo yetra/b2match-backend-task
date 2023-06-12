@@ -39,16 +39,7 @@ func FindUsers(c *gin.Context) {
 
 // GET /users/:id
 func FindUserByID(c *gin.Context) {
-	var user models.User
-
-	id := c.Param("id")
-
-	if err := database.DB.Preload("Events").First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	findResourceByID[models.User](c)
 }
 
 // POST /users

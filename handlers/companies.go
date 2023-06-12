@@ -22,15 +22,12 @@ type updateCompanyJSON struct {
 
 // GET /companies
 func FindCompanies(c *gin.Context) {
-	var companies []models.Company
-	database.DB.Preload("Representatives").Find(&companies)
-
-	c.JSON(http.StatusOK, gin.H{"companies": companies})
+	findResources[models.Company](c)
 }
 
 // GET /companies/:id
 func FindCompanyByID(c *gin.Context) {
-	findResources[models.Company](c)
+	findResourceByID[models.Company](c)
 }
 
 // POST /companies

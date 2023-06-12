@@ -34,16 +34,7 @@ func FindEvents(c *gin.Context) {
 
 // GET /events/:id
 func FindEventByID(c *gin.Context) {
-	var event models.Event
-
-	id := c.Param("id")
-
-	if err := database.DB.Preload("Participants").First(&event, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"event": event})
+	findResourceByID[models.Event](c)
 }
 
 // POST /events
