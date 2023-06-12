@@ -82,3 +82,8 @@ func ScheduleMeeting(c *gin.Context) {
 
 	c.Status(http.StatusOK)
 }
+
+// DELETE /meetings/:id
+func DeleteMeeting(c *gin.Context) {
+	deleteResource[models.Meeting](c)
+}

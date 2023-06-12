@@ -57,3 +57,8 @@ func UpdateCompany(c *gin.Context) {
 
 	updateResource(c, &company, &updatedCompany)
 }
+
+// DELETE /companies/:id
+func DeleteCompany(c *gin.Context) {
+	deleteResource[models.Company](c)
+}

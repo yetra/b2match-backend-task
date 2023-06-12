@@ -113,3 +113,8 @@ func UpdateUser(c *gin.Context) {
 
 	updateResource(c, &user, &updatedUser)
 }
+
+// DELETE /users/:id
+func DeleteUser(c *gin.Context) {
+	deleteResource[models.User](c)
+}

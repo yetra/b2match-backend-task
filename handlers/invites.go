@@ -79,6 +79,11 @@ func RespondToInvite(c *gin.Context) {
 	updateResource(c, &invite, &rsvpData)
 }
 
+// DELETE /invites/:id
+func DeleteInvite(c *gin.Context) {
+	deleteResource[models.Invite](c)
+}
+
 func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
 	var event models.Event
 

@@ -95,3 +95,8 @@ func UpdateEvent(c *gin.Context) {
 
 	updateResource(c, &event, &updatedEvent)
 }
+
+// DELETE /events/:id
+func DeleteEvent(c *gin.Context) {
+	deleteResource[models.Event](c)
+}
