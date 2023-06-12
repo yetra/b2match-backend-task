@@ -34,8 +34,7 @@ func GetCompanyByID(c *gin.Context) {
 func CreateCompany(c *gin.Context) {
 	var newCompany newCompanyJSON
 
-	if err := c.ShouldBindJSON(&newCompany); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &newCompany); err != nil {
 		return
 	}
 
@@ -63,8 +62,7 @@ func UpdateCompany(c *gin.Context) {
 
 	var updatedCompany updateCompanyJSON
 
-	if err := c.ShouldBindJSON(&updatedCompany); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &updatedCompany); err != nil {
 		return
 	}
 

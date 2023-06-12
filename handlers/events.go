@@ -41,8 +41,7 @@ func GetEventByID(c *gin.Context) {
 func CreateEvent(c *gin.Context) {
 	var newEvent newEventJSON
 
-	if err := c.ShouldBindJSON(&newEvent); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &newEvent); err != nil {
 		return
 	}
 
@@ -75,8 +74,7 @@ func JoinEvent(c *gin.Context) {
 
 	var joinData joinEventJSON
 
-	if err := c.ShouldBindJSON(&joinData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &joinData); err != nil {
 		return
 	}
 
@@ -109,8 +107,7 @@ func UpdateEvent(c *gin.Context) {
 
 	var updatedEvent updateEventJSON
 
-	if err := c.ShouldBindJSON(&updatedEvent); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &updatedEvent); err != nil {
 		return
 	}
 

@@ -42,8 +42,7 @@ func GetMeetingInviteByID(c *gin.Context) {
 func CreateMeetingInvite(c *gin.Context) {
 	var inviteData newInviteJSON
 
-	if err := c.ShouldBindJSON(&inviteData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &inviteData); err != nil {
 		return
 	}
 
@@ -78,8 +77,7 @@ func CreateMeetingInvite(c *gin.Context) {
 func RespondToInvite(c *gin.Context) {
 	var rsvpData rsvpJSON
 
-	if err := c.ShouldBindJSON(&rsvpData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &rsvpData); err != nil {
 		return
 	}
 

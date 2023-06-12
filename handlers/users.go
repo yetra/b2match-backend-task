@@ -46,15 +46,13 @@ func GetUserByID(c *gin.Context) {
 func CreateUser(c *gin.Context) {
 	var newUser newUserJSON
 
-	if err := c.ShouldBindJSON(&newUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &newUser); err != nil {
 		return
 	}
 
 	var company models.Company
 
-	if err := database.DB.First(&company, newUser.CompanyID).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &company, newUser.CompanyID); err != nil {
 		return
 	}
 
@@ -124,8 +122,7 @@ func UpdateUser(c *gin.Context) {
 
 	var updatedUser updateUserJSON
 
-	if err := c.ShouldBindJSON(&updatedUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &updatedUser); err != nil {
 		return
 	}
 

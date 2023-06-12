@@ -42,8 +42,7 @@ func GetEventMeetingByID(c *gin.Context) {
 func CreateEventMeeting(c *gin.Context) {
 	var newMeeting newMeetingJSON
 
-	if err := c.ShouldBindJSON(&newMeeting); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := bindJSON(c, &newMeeting); err != nil {
 		return
 	}
 
