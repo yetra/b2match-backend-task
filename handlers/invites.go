@@ -52,6 +52,11 @@ func CreateMeetingInvite(c *gin.Context) {
 	createResource(c, &invite)
 }
 
+// GET /invites/:id
+func GetInviteByID(c *gin.Context) {
+	getResourceByID[models.Meeting](c)
+}
+
 // PATCH /invites/:id/rsvp
 func RespondToInvite(c *gin.Context) {
 	var rsvpData rsvpJSON
