@@ -30,16 +30,7 @@ func FindCompanies(c *gin.Context) {
 
 // GET /companies/:id
 func FindCompanyByID(c *gin.Context) {
-	var company models.Company
-
-	id := c.Param("id")
-
-	if err := database.DB.Preload("Representatives").First(&company, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"company": company})
+	findResources[models.Company](c)
 }
 
 // POST /companies

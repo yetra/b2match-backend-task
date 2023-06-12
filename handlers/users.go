@@ -34,10 +34,7 @@ type updateUserJSON struct {
 
 // GET /users
 func FindUsers(c *gin.Context) {
-	var users []models.User
-	database.DB.Preload("Events").Find(&users)
-
-	c.JSON(http.StatusOK, gin.H{"users": users})
+	findResources[models.User](c)
 }
 
 // GET /users/:id

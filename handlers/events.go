@@ -29,10 +29,7 @@ type joinEventJSON struct {
 
 // GET /events
 func FindEvents(c *gin.Context) {
-	var events []models.Event
-	database.DB.Preload("Participants").Find(&events)
-
-	c.JSON(http.StatusOK, gin.H{"events": events})
+	findResources[models.Event](c)
 }
 
 // GET /events/:id
