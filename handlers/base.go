@@ -45,6 +45,16 @@ func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) e
 	return nil
 }
 
+func findNestedResources[R, RNested resource](c *gin.Context, resource *R, nestedResources *[]RNested, assocName string) error {
+	err := database.DB.Model(&resource).Association(assocName).Find(&nestedResources)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return err
+	}
+
+	return nil
+}
+
 func bindJSON[J inputJSON](c *gin.Context, inputJSON *J) error {
 	var input J
 
@@ -73,9 +83,7 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 		return
 	}
 
-	err := database.DB.Model(&resource).Association(assocName).Find(&nestedResources)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findNestedResources(c, &resource, &nestedResources, assocName); err != nil {
 		return
 	}
 
