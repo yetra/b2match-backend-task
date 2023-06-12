@@ -52,6 +52,11 @@ func CreateEventMeeting(c *gin.Context) {
 	createResource(c, &meeting)
 }
 
+// GET /meetings/:id
+func GetMeetingByID(c *gin.Context) {
+	getResourceByID[models.Meeting](c)
+}
+
 // PATCH /meetings/:id/schedule
 func ScheduleMeeting(c *gin.Context) {
 	var meeting models.Meeting
