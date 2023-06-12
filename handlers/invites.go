@@ -19,23 +19,7 @@ type rsvpJSON struct {
 
 // GET /meetings/:id/invites
 func FindMeetingInvites(c *gin.Context) {
-	var meeting models.Meeting
-	var invites []models.Invite
-
-	id := c.Param("id")
-
-	if err := database.DB.First(&meeting, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err := database.DB.Model(&meeting).Association("Invites").Find(&invites)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"invites": invites})
+	findNestedResources[models.Meeting, models.Invite](c, "Invites")
 }
 
 // GET /meetings/:id/invites/:invite_id
