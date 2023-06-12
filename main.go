@@ -35,11 +35,13 @@ func main() {
 	route.GET("/events/:id/meetings", handlers.GetEventMeetings)
 	route.POST("/events/:id/meetings", handlers.CreateEventMeeting)
 
+	route.GET("/meetings/:id", handlers.GetMeetingByID)
+	route.PATCH("/meetings/:id/schedule", handlers.ScheduleMeeting)
+
 	route.GET("/meetings/:id/invites", handlers.GetMeetingInvites)
 	route.POST("/meetings/:id/invites", handlers.CreateMeetingInvite)
 
-	route.PATCH("/meetings/:id/schedule", handlers.ScheduleMeeting)
-
+	route.GET("/invites/:id", handlers.GetInviteByID)
 	route.PATCH("/invites/:id/rsvp", handlers.RespondToInvite)
 
 	route.Run(":8085")
