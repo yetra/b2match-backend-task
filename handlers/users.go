@@ -44,13 +44,11 @@ func GetUserByID(c *gin.Context) {
 // POST /users
 func CreateUser(c *gin.Context) {
 	var newUser newUserJSON
-
 	if err := bindJSON(c, &newUser); err != nil {
 		return
 	}
 
 	var company models.Company
-
 	if err := findResourceByID(c, &company, newUser.CompanyID); err != nil {
 		return
 	}
@@ -71,22 +69,19 @@ func CreateUser(c *gin.Context) {
 // GET /users/:id/meetings
 func GetUserScheduledMeetings(c *gin.Context) {
 	var user models.User
-
 	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
 		return
 	}
 
 	var invites []models.Invite
-
 	if err := findNestedResources(c, &user, &invites, "Invites"); err != nil {
 		return
 	}
 
 	var scheduledMeetings []models.Meeting
-
 	for _, invite := range invites {
-		var meeting models.Meeting
 
+		var meeting models.Meeting
 		if err := findResourceByID(c, &invite, invite.MeetingID); err != nil {
 			return
 		}
@@ -107,13 +102,11 @@ func GetUserInvites(c *gin.Context) {
 // PATCH /users/:id
 func UpdateUser(c *gin.Context) {
 	var user models.User
-
 	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
 		return
 	}
 
 	var updatedUser updateUserJSON
-
 	if err := bindJSON(c, &updatedUser); err != nil {
 		return
 	}

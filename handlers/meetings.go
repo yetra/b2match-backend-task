@@ -25,19 +25,16 @@ func GetEventMeetings(c *gin.Context) {
 // POST /events/:id/meetings
 func CreateEventMeeting(c *gin.Context) {
 	var newMeeting newMeetingJSON
-
 	if err := bindJSON(c, &newMeeting); err != nil {
 		return
 	}
 
 	var event models.Event
-
 	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
 		return
 	}
 
 	var organizer models.User
-
 	if err := findResourceByID(c, &organizer, newMeeting.OrganizerID); err != nil {
 		return
 	}
@@ -60,13 +57,11 @@ func GetMeetingByID(c *gin.Context) {
 // PATCH /meetings/:id/schedule
 func ScheduleMeeting(c *gin.Context) {
 	var meeting models.Meeting
-
 	if err := findResourceByID(c, &meeting, c.Param("id")); err != nil {
 		return
 	}
 
 	var invites []models.Invite
-
 	if err := findNestedResources(c, &meeting, &invites, "Invites"); err != nil {
 		return
 	}

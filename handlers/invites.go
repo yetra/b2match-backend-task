@@ -22,19 +22,16 @@ func GetMeetingInvites(c *gin.Context) {
 // POST /meetings/:id/invites
 func CreateMeetingInvite(c *gin.Context) {
 	var inviteData newInviteJSON
-
 	if err := bindJSON(c, &inviteData); err != nil {
 		return
 	}
 
 	var meeting models.Meeting
-
 	if err := findResourceByID(c, &meeting, c.Param("id")); err != nil {
 		return
 	}
 
 	var invitee models.User
-
 	if err := findResourceByID(c, &invitee, inviteData.InviteeID); err != nil {
 		return
 	}
@@ -57,13 +54,11 @@ func GetInviteByID(c *gin.Context) {
 // PATCH /invites/:id/rsvp
 func RespondToInvite(c *gin.Context) {
 	var rsvpData rsvpJSON
-
 	if err := bindJSON(c, &rsvpData); err != nil {
 		return
 	}
 
 	var invite models.Invite
-
 	if err := findResourceByID(c, &invite, c.Param("id")); err != nil {
 		return
 	}

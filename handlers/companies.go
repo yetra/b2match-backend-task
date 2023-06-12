@@ -30,7 +30,6 @@ func GetCompanyByID(c *gin.Context) {
 // POST /companies
 func CreateCompany(c *gin.Context) {
 	var newCompany newCompanyJSON
-
 	if err := bindJSON(c, &newCompany); err != nil {
 		return
 	}
@@ -47,13 +46,11 @@ func CreateCompany(c *gin.Context) {
 // PATCH /companies/:id
 func UpdateCompany(c *gin.Context) {
 	var company models.Company
-
 	if err := findResourceByID(c, &company, c.Param("id")); err != nil {
 		return
 	}
 
 	var updatedCompany updateCompanyJSON
-
 	if err := bindJSON(c, &updatedCompany); err != nil {
 		return
 	}

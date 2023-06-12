@@ -57,7 +57,6 @@ func findNestedResources[R, RNested resource](c *gin.Context, resource *R, neste
 
 func bindJSON[J inputJSON](c *gin.Context, inputJSON *J) error {
 	var input J
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return err
@@ -77,12 +76,11 @@ func getResources[R resource](c *gin.Context) {
 
 func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 	var resource R
-	var nestedResources []RNested
-
 	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
 		return
 	}
 
+	var nestedResources []RNested
 	if err := findNestedResources(c, &resource, &nestedResources, assocName); err != nil {
 		return
 	}
@@ -94,7 +92,6 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 
 func getResourceByID[R resource](c *gin.Context) {
 	var resource R
-
 	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
 		return
 	}

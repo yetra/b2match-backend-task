@@ -40,7 +40,6 @@ func GetEventByID(c *gin.Context) {
 // POST /events
 func CreateEvent(c *gin.Context) {
 	var newEvent newEventJSON
-
 	if err := bindJSON(c, &newEvent); err != nil {
 		return
 	}
@@ -59,19 +58,16 @@ func CreateEvent(c *gin.Context) {
 // POST /events/:id/join
 func JoinEvent(c *gin.Context) {
 	var event models.Event
-
 	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
 		return
 	}
 
 	var joinData joinEventJSON
-
 	if err := bindJSON(c, &joinData); err != nil {
 		return
 	}
 
 	var participant models.User
-
 	if err := findResourceByID(c, &participant, joinData.ID); err != nil {
 		return
 	}
@@ -88,13 +84,11 @@ func JoinEvent(c *gin.Context) {
 // PATCH /events/:id
 func UpdateEvent(c *gin.Context) {
 	var event models.Event
-
 	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
 		return
 	}
 
 	var updatedEvent updateEventJSON
-
 	if err := bindJSON(c, &updatedEvent); err != nil {
 		return
 	}
