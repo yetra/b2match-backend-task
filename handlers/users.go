@@ -80,10 +80,7 @@ func CreateUser(c *gin.Context) {
 func GetUserScheduledMeetings(c *gin.Context) {
 	var user models.User
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
 		return
 	}
 
@@ -100,8 +97,7 @@ func GetUserScheduledMeetings(c *gin.Context) {
 	for _, invite := range invites {
 		var meeting models.Meeting
 
-		if err := database.DB.First(&meeting, invite.MeetingID).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		if err := findResourceByID(c, &invite, invite.MeetingID); err != nil {
 			return
 		}
 
@@ -122,10 +118,7 @@ func GetUserInvites(c *gin.Context) {
 func UpdateUser(c *gin.Context) {
 	var user models.User
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
 		return
 	}
 

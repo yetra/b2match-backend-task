@@ -49,17 +49,13 @@ func CreateEventMeeting(c *gin.Context) {
 
 	var event models.Event
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
 		return
 	}
 
 	var organizer models.User
 
-	if err := database.DB.First(&organizer, newMeeting.OrganizerID).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &organizer, newMeeting.OrganizerID); err != nil {
 		return
 	}
 
@@ -82,10 +78,7 @@ func CreateEventMeeting(c *gin.Context) {
 func ScheduleMeeting(c *gin.Context) {
 	var meeting models.Meeting
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&meeting, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &meeting, c.Param("id")); err != nil {
 		return
 	}
 

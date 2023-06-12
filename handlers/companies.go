@@ -57,10 +57,7 @@ func CreateCompany(c *gin.Context) {
 func UpdateCompany(c *gin.Context) {
 	var company models.Company
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&company, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &company, c.Param("id")); err != nil {
 		return
 	}
 

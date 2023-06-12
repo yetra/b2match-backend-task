@@ -49,17 +49,13 @@ func CreateMeetingInvite(c *gin.Context) {
 
 	var meeting models.Meeting
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&meeting, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &meeting, c.Param("id")); err != nil {
 		return
 	}
 
 	var invitee models.User
 
-	if err := database.DB.First(&invitee, inviteData.InviteeID).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &invitee, inviteData.InviteeID); err != nil {
 		return
 	}
 
@@ -89,10 +85,7 @@ func RespondToInvite(c *gin.Context) {
 
 	var invite models.Invite
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&invite, id).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &invite, c.Param("id")); err != nil {
 		return
 	}
 
