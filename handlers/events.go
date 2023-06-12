@@ -55,6 +55,26 @@ func CreateEvent(c *gin.Context) {
 	createResource(c, &event)
 }
 
+// PATCH /events/:id
+func UpdateEvent(c *gin.Context) {
+	var event models.Event
+	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
+		return
+	}
+
+	var updatedEvent updateEventJSON
+	if err := bindJSON(c, &updatedEvent); err != nil {
+		return
+	}
+
+	updateResource(c, &event, &updatedEvent)
+}
+
+// DELETE /events/:id
+func DeleteEvent(c *gin.Context) {
+	deleteResource[models.Event](c)
+}
+
 // POST /events/:id/join
 func JoinEvent(c *gin.Context) {
 	var event models.Event
@@ -79,24 +99,4 @@ func JoinEvent(c *gin.Context) {
 	}
 
 	c.Status(http.StatusCreated)
-}
-
-// PATCH /events/:id
-func UpdateEvent(c *gin.Context) {
-	var event models.Event
-	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
-		return
-	}
-
-	var updatedEvent updateEventJSON
-	if err := bindJSON(c, &updatedEvent); err != nil {
-		return
-	}
-
-	updateResource(c, &event, &updatedEvent)
-}
-
-// DELETE /events/:id
-func DeleteEvent(c *gin.Context) {
-	deleteResource[models.Event](c)
 }
