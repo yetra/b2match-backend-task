@@ -34,7 +34,7 @@ func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) e
 }
 
 func findNestedResources[R, RNested resource](c *gin.Context, resource *R, nestedResources *[]RNested, assocName string) error {
-	err := database.DB.Model(&resource).Association(assocName).Find(&nestedResources)
+	err := database.DB.Model(resource).Association(assocName).Find(nestedResources)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return err
@@ -44,7 +44,7 @@ func findNestedResources[R, RNested resource](c *gin.Context, resource *R, neste
 }
 
 func bindJSON[J inputJSON](c *gin.Context, inputJSON *J) error {
-	if err := c.ShouldBindJSON(&inputJSON); err != nil {
+	if err := c.ShouldBindJSON(inputJSON); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
 		return err
 	}
@@ -83,19 +83,19 @@ func getResourceByID[R resource](c *gin.Context) {
 }
 
 func createResource[R resource](c *gin.Context, resourceModel *R) {
-	if err := database.DB.Create(&resourceModel).Error; err != nil {
+	if err := database.DB.Create(resourceModel).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, resourceModel)
+	c.JSON(http.StatusCreated, *resourceModel)
 }
 
 func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *R, input *J) {
-	if err := database.DB.Model(&resource).Updates(&input).Error; err != nil {
+	if err := database.DB.Model(resource).Updates(input).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, resource)
+	c.JSON(http.StatusOK, *resource)
 }
