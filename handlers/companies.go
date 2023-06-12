@@ -15,6 +15,11 @@ type newCompanyJSON struct {
 	About    string
 }
 
+type updateCompanyJSON struct {
+	Location string
+	About    string
+}
+
 // GET /companies
 func FindCompanies(c *gin.Context) {
 	var companies []models.Company
@@ -51,10 +56,37 @@ func CreateCompany(c *gin.Context) {
 		Location: newCompany.Location,
 		About:    newCompany.About,
 	}
+
 	if err := database.DB.Create(&company).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"company": company})
+}
+
+// PATCH /companies/:id
+func UpdateCompany(c *gin.Context) {
+	var company models.Company
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&company, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	var updatedCompany updateCompanyJSON
+
+	if err := c.ShouldBindJSON(&updatedCompany); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := database.DB.Model(&company).Updates(&updatedCompany).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"company": company})
 }
