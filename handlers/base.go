@@ -33,6 +33,28 @@ func findResources[R resource](c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{resourcesName: resources})
 }
 
+func findNestedResources[R resource, RNested resource](c *gin.Context, assocName string) {
+	var resource R
+	var nestedResources []RNested
+
+	id := c.Param("id")
+
+	if err := database.DB.First(&resource, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := database.DB.Model(&resource).Association(assocName).Find(&nestedResources)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	nestedResourcesName := strings.ToLower(getTypeName(nestedResources))
+
+	c.JSON(http.StatusOK, gin.H{nestedResourcesName: nestedResources})
+}
+
 func findResourceByID[r resource](c *gin.Context) {
 	var resource r
 
