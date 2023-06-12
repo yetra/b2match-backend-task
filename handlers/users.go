@@ -66,7 +66,7 @@ func CreateUser(c *gin.Context) {
 	createResource(c, &user)
 }
 
-// GET /users/:id/meetings
+// GET /users/:id/scheduled-meetings
 func GetUserScheduledMeetings(c *gin.Context) {
 	var user models.User
 	if err := findResourceByID(c, &user, c.Param("id")); err != nil {

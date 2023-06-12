@@ -26,7 +26,7 @@ func main() {
 	route.PATCH("/users/:id", handlers.UpdateUser)
 	route.DELETE("/users/:id", handlers.DeleteUser)
 
-	route.GET("/users/:id/meetings", handlers.GetUserScheduledMeetings)
+	route.GET("/users/:id/scheduled-meetings", handlers.GetUserScheduledMeetings)
 	route.GET("/users/:id/invites", handlers.GetUserInvites)
 
 	route.GET("/events", handlers.GetEvents)
