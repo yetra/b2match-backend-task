@@ -14,8 +14,8 @@ type resource interface {
 	models.Company | models.User | models.Event | models.Meeting | models.Invite
 }
 
-func FindResources[r resource](c *gin.Context) {
-	var resources []r
+func findResources[R resource](c *gin.Context) {
+	var resources []R
 	database.DB.Find(&resources)
 
 	resourcesName := strings.ToLower(reflect.TypeOf(resources).Elem().Name())
