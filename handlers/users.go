@@ -66,12 +66,7 @@ func CreateUser(c *gin.Context) {
 		CompanyID: company.ID,
 	}
 
-	if err := database.DB.Create(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"user": user})
+	createResource(c, &user)
 }
 
 // GET /users/:id/meetings

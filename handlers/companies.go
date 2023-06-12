@@ -44,12 +44,7 @@ func CreateCompany(c *gin.Context) {
 		About:    newCompany.About,
 	}
 
-	if err := database.DB.Create(&company).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"company": company})
+	createResource(c, &company)
 }
 
 // PATCH /companies/:id

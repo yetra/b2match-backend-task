@@ -53,12 +53,7 @@ func CreateEvent(c *gin.Context) {
 		EndDate:   newEvent.EndDate,
 	}
 
-	if err := database.DB.Create(&event).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"event": event})
+	createResource(c, &event)
 }
 
 // POST /events/:id/join

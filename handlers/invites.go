@@ -65,12 +65,7 @@ func CreateMeetingInvite(c *gin.Context) {
 		InviteeID: invitee.ID,
 	}
 
-	if err := database.DB.Create(&invite).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"invite": invite})
+	createResource(c, &invite)
 }
 
 // PATCH /invites/:id/rsvp

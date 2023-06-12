@@ -65,12 +65,7 @@ func CreateEventMeeting(c *gin.Context) {
 		OrganizerID: organizer.ID,
 	}
 
-	if err := database.DB.Create(&meeting).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"meeting": meeting})
+	createResource(c, &meeting)
 }
 
 // PATCH /meetings/:id/schedule
