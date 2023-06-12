@@ -26,7 +26,7 @@ type inputJSON interface {
 	newResourceJSON | updateResourceJSON | joinEventJSON
 }
 
-func getTypeName(variable interface{}) string {
+func typeName(variable interface{}) string {
 	t := reflect.TypeOf(variable)
 
 	if t.Kind() == reflect.Slice || t.Kind() == reflect.Ptr {
@@ -68,7 +68,7 @@ func getResources[R resource](c *gin.Context) {
 	var resources []R
 	database.DB.Find(&resources)
 
-	resourcesName := strings.ToLower(getTypeName(resources))
+	resourcesName := strings.ToLower(typeName(resources))
 
 	c.JSON(http.StatusOK, gin.H{resourcesName: resources})
 }
@@ -84,7 +84,7 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 		return
 	}
 
-	nestedResourcesName := strings.ToLower(getTypeName(nestedResources))
+	nestedResourcesName := strings.ToLower(typeName(nestedResources))
 
 	c.JSON(http.StatusOK, gin.H{nestedResourcesName: nestedResources})
 }
@@ -95,7 +95,7 @@ func getResourceByID[R resource](c *gin.Context) {
 		return
 	}
 
-	resourceName := strings.ToLower(getTypeName(resource))
+	resourceName := strings.ToLower(typeName(resource))
 
 	c.JSON(http.StatusOK, gin.H{resourceName: resource})
 }
@@ -106,7 +106,7 @@ func createResource[R resource](c *gin.Context, resourceModel *R) {
 		return
 	}
 
-	resourceName := strings.ToLower(getTypeName(resourceModel))
+	resourceName := strings.ToLower(typeName(resourceModel))
 
 	c.JSON(http.StatusCreated, gin.H{resourceName: resourceModel})
 }
@@ -117,7 +117,7 @@ func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *
 		return
 	}
 
-	resourceName := strings.ToLower(getTypeName(resource))
+	resourceName := strings.ToLower(typeName(resource))
 
 	c.JSON(http.StatusOK, gin.H{resourceName: resource})
 }
