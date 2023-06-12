@@ -75,7 +75,7 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	if err := checkMeetingConflicts(&invite); err != nil {
+	if err := checkMeetingConflicts(invite.InviteeID, invite.MeetingID); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
 		return
 	}
@@ -115,17 +115,17 @@ func checkInviteeNotAlreadyInvited(inviteeID uint, invites []models.Invite) erro
 	return nil
 }
 
-func checkMeetingConflicts(invite *models.Invite) error {
+func checkMeetingConflicts(inviteeID uint, meetingID uint) error {
 	var acceptedInvites []models.Invite
 
 	whereClause := "invitee_id = ? AND status = ?"
-	err := database.DB.Find(&acceptedInvites, whereClause, invite.InviteeID, models.Accepted).Error
+	err := database.DB.Find(&acceptedInvites, whereClause, inviteeID, models.Accepted).Error
 	if err != nil {
 		return err
 	}
 
 	var meeting models.Meeting
-	if err := database.DB.First(&meeting, invite.MeetingID).Error; err != nil {
+	if err := database.DB.First(&meeting, meetingID).Error; err != nil {
 		return err
 	}
 
