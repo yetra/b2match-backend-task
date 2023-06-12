@@ -3,6 +3,7 @@ package handlers
 import (
 	"b2match/backend/database"
 	"b2match/backend/models"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -38,9 +39,8 @@ func CreateMeetingInvite(c *gin.Context) {
 		return
 	}
 
-	if !isInviteeAParticipant(invitee.ID, meeting.EventID) {
-		err_message := "The invitee is not an event participant."
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err_message})
+	if err := checkInviteeIsAParticipant(invitee.ID, meeting.EventID); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -74,19 +74,19 @@ func RespondToInvite(c *gin.Context) {
 	updateResource(c, &invite, &rsvpData)
 }
 
-func isInviteeAParticipant(inviteeID uint, eventID uint) bool {
+func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
 	var event models.Event
 
 	err := database.DB.Preload("Participants").First(&event, eventID).Error
 	if err != nil {
-		return false
+		return err
 	}
 
 	for _, participant := range event.Participants {
 		if participant.ID == inviteeID {
-			return true
+			return nil
 		}
 	}
 
-	return false
+	return errors.New("the invitee is not an event participant")
 }
