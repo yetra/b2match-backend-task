@@ -24,6 +24,15 @@ func getTypeName(variable interface{}) string {
 	}
 }
 
+func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) error {
+	if err := database.DB.First(resource, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return err
+	}
+
+	return nil
+}
+
 func getResources[R resource](c *gin.Context) {
 	var resources []R
 	database.DB.Find(&resources)
@@ -37,10 +46,7 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 	var resource R
 	var nestedResources []RNested
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&resource, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
 		return
 	}
 
@@ -58,10 +64,7 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 func getResourceByID[R resource](c *gin.Context) {
 	var resource R
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&resource, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
 		return
 	}
 
