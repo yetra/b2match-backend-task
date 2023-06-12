@@ -60,10 +60,7 @@ func CreateEvent(c *gin.Context) {
 func JoinEvent(c *gin.Context) {
 	var event models.Event
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
 		return
 	}
 
@@ -75,8 +72,7 @@ func JoinEvent(c *gin.Context) {
 
 	var participant models.User
 
-	if err := database.DB.First(&participant, joinData.ID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &participant, joinData.ID); err != nil {
 		return
 	}
 
@@ -93,10 +89,7 @@ func JoinEvent(c *gin.Context) {
 func UpdateEvent(c *gin.Context) {
 	var event models.Event
 
-	id := c.Param("id")
-
-	if err := database.DB.First(&event, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
 		return
 	}
 
