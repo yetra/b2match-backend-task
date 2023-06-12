@@ -22,22 +22,6 @@ func GetMeetingInvites(c *gin.Context) {
 	getNestedResources[models.Meeting, models.Invite](c, "Invites")
 }
 
-// GET /meetings/:id/invites/:invite_id
-func GetMeetingInviteByID(c *gin.Context) {
-	var invite models.Invite
-
-	id := c.Param("id")
-	invite_id := c.Param("invite_id")
-
-	err := database.DB.Where("meeting_id = ?", id).First(&invite, invite_id).Error
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"invite": invite})
-}
-
 // POST /meetings/:id/invites
 func CreateMeetingInvite(c *gin.Context) {
 	var inviteData newInviteJSON

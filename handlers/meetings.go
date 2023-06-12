@@ -22,22 +22,6 @@ func GetEventMeetings(c *gin.Context) {
 	getNestedResources[models.Event, models.Meeting](c, "Meetings")
 }
 
-// GET /event/:id/meetings/:meeting_id
-func GetEventMeetingByID(c *gin.Context) {
-	var meeting models.Meeting
-
-	id := c.Param("id")
-	meeting_id := c.Param("meeting_id")
-
-	err := database.DB.Where("event_id = ?", id).First(&meeting, meeting_id).Error
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"meeting": meeting})
-}
-
 // POST /events/:id/meetings
 func CreateEventMeeting(c *gin.Context) {
 	var newMeeting newMeetingJSON
