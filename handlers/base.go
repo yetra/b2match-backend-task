@@ -19,11 +19,11 @@ type newResourceJSON interface {
 }
 
 type updateResourceJSON interface {
-	updateCompanyJSON | updateUserJSON | updateEventJSON
+	updateCompanyJSON | updateUserJSON | updateEventJSON | rsvpJSON
 }
 
 type inputJSON interface {
-	newResourceJSON | updateResourceJSON | joinEventJSON | rsvpJSON
+	newResourceJSON | updateResourceJSON | joinEventJSON
 }
 
 func getTypeName(variable interface{}) string {
