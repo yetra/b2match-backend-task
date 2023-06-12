@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"b2match/backend/database"
 	"b2match/backend/models"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,6 +38,12 @@ func CreateMeetingInvite(c *gin.Context) {
 		return
 	}
 
+	if !isInviteeAParticipant(invitee.ID, meeting.EventID) {
+		err_message := "The invitee is not an event participant."
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err_message})
+		return
+	}
+
 	invite := models.Invite{
 		Status: models.Pending,
 
@@ -64,4 +72,21 @@ func RespondToInvite(c *gin.Context) {
 	}
 
 	updateResource(c, &invite, &rsvpData)
+}
+
+func isInviteeAParticipant(inviteeID uint, eventID uint) bool {
+	var event models.Event
+
+	err := database.DB.Preload("Participants").First(&event, eventID).Error
+	if err != nil {
+		return false
+	}
+
+	for _, participant := range event.Participants {
+		if participant.ID == inviteeID {
+			return true
+		}
+	}
+
+	return false
 }
