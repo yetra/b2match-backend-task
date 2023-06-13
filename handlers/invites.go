@@ -19,7 +19,7 @@ import (
 // @Failure		 404	{object}	dto.Error
 // @Router		 /invites/{id} [get]
 func GetInviteByID(c *gin.Context) {
-	getResourceByID[models.Meeting](c)
+	getResourceByID[models.Invite](c)
 }
 
 // RespondToInvite godoc
