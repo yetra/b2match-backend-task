@@ -3,9 +3,9 @@ package models
 type Status int
 
 const (
-	StatusPending  Status = iota
-	StatusAccepted Status = iota
-	StatusDeclined Status = iota
+	StatusPending Status = iota
+	StatusAccepted
+	StatusDeclined
 )
 
 type Invite struct {
