@@ -36,11 +36,11 @@ func CreateMeetingInvite(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
 		return
 	}
-	if err := checkInviteeNotAlreadyInvited(invitee.ID, meeting.ID); err != nil {
+	if err := checkInviteeIsAParticipant(invitee.ID, meeting.EventID); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
 		return
 	}
-	if err := checkInviteeIsAParticipant(invitee.ID, meeting.EventID); err != nil {
+	if err := checkInviteeNotAlreadyInvited(invitee.ID, meeting.ID); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
 		return
 	}
