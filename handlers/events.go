@@ -177,7 +177,7 @@ func GetEventMeetings(c *gin.Context) {
 //
 // @Summary      Create a new event meetings
 // @Description  Creates a meeting for the event specified by id and stores it in the database. Returns the new meeting.
-// @Tags         meetings
+// @Tags         events
 // @Accept       json
 // @Produce      json
 // @Success      201 	{object}	models.Meeting
