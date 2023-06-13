@@ -32,7 +32,7 @@ func CreateMeetingInvite(c *gin.Context) {
 		return
 	}
 
-	if err := checkInviteeNotAlreadyInvited(invitee.ID, meeting.Invites); err != nil {
+	if err := checkInviteeNotAlreadyInvited(invitee.ID, meeting.ID); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
 		return
 	}
@@ -98,7 +98,14 @@ func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
 	return errors.New("the invitee is not an event participant")
 }
 
-func checkInviteeNotAlreadyInvited(inviteeID uint, invites []models.Invite) error {
+func checkInviteeNotAlreadyInvited(inviteeID uint, meetingID uint) error {
+	var invites []models.Invite
+
+	err := database.DB.Where("meeting_id = ?", meetingID).Find(&invites).Error
+	if err != nil {
+		return err
+	}
+
 	for _, invite := range invites {
 		if inviteeID == invite.InviteeID {
 			return errors.New("invitee already invited to meeting")
