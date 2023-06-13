@@ -32,6 +32,10 @@ func CreateMeetingInvite(c *gin.Context) {
 		return
 	}
 
+	if err := checkInviteeIsNotOrganizer(invitee.ID, meeting.OrganizerID); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
+		return
+	}
 	if err := checkInviteeNotAlreadyInvited(invitee.ID, meeting.ID); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
 		return
@@ -79,6 +83,14 @@ func RespondToInvite(c *gin.Context) {
 // DELETE /invites/:id
 func DeleteInvite(c *gin.Context) {
 	deleteResource[models.Invite](c, nil)
+}
+
+func checkInviteeIsNotOrganizer(inviteeID uint, organizerID uint) error {
+	if inviteeID == organizerID {
+		return errors.New("the invitee is the meeting organizer")
+	}
+
+	return nil
 }
 
 func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
