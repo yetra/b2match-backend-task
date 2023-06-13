@@ -10,12 +10,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GET /meetings/:id/invites
+// GetMeetingInvites godoc
+//
+// @Summary      Get meeting invites
+// @Description  Responds with a list of the meeting's invites as JSON.
+// @Tags         meetings
+// @Produce      json
+// @Param		 id	path int true "Meeting ID"
+// @Success      200	{array}		models.Invite
+// @Failure      404	{object}	gin.H
+// @Failure      500	{object}	gin.H
+// @Router       /meetings/{id}/invites [get]
 func GetMeetingInvites(c *gin.Context) {
 	getNestedResources[models.Meeting, models.Invite](c, "Invites")
 }
 
-// POST /meetings/:id/invites
+// CreateMeetingInvite godoc
+//
+// @Summary      Create a new meeting invite
+// @Description  Creates an invite for the meeting specified by id and stores it in the database. Returns the new invite.
+// @Tags         meetings
+// @Accept       json
+// @Produce      json
+// @Success      201 	{object}	models.Invite
+// @Failure      400 	{object}	gin.H
+// @Failure      500 	{object}	gin.H
+// @Router       /meeting/{id}/invites [post]
 func CreateMeetingInvite(c *gin.Context) {
 	var input dto.NewInviteJSON
 	if err := bindJSON(c, &input); err != nil {
@@ -55,12 +75,32 @@ func CreateMeetingInvite(c *gin.Context) {
 	createResource(c, &invite)
 }
 
-// GET /invites/:id
+// GetInviteByID godoc
+//
+// @Summary		 Get a single invite by id
+// @Description	 Returns the invite whose ID value matches the id parameter.
+// @Tags		 invites
+// @Produce		 json
+// @Param		 id path int true "Invite ID"
+// @Success		 200	{object}	models.Invite
+// @Failure		 404	{object}	gin.H
+// @Router		 /invites/{id} [get]
 func GetInviteByID(c *gin.Context) {
 	getResourceByID[models.Meeting](c)
 }
 
-// PATCH /invites/:id/rsvp
+// RespondToInvite godoc
+//
+// @Summary		 Respond to an invite
+// @Description	 Updates an invite's status with the request JSON. Returns the updated invite.
+// @Tags		 invites
+// @Produce		 json
+// @Param		 id path int true "Invite ID"
+// @Success		 200	{object}	models.Invite
+// @Failure		 400	{object}	gin.H
+// @Failure		 404	{object}	gin.H
+// @Failure		 422	{object}	gin.H
+// @Router		 /invites/{id}/rsvp [patch]
 func RespondToInvite(c *gin.Context) {
 	var input dto.RSVPJSON
 	if err := bindJSON(c, &input); err != nil {
@@ -80,7 +120,17 @@ func RespondToInvite(c *gin.Context) {
 	updateResource(c, &invite, &input)
 }
 
-// DELETE /invites/:id
+// DeleteInvite godoc
+//
+// @Summary      Delete an invite
+// @Description  Deletes an invite specified by id.
+// @Tags         invites
+// @Accept       json
+// @Produce      json
+// @Param		 id	path int true "Invite ID"
+// @Success      204  {object}  nil
+// @Failure      404  {object}  gin.H
+// @Router       /invites/{id} [delete]
 func DeleteInvite(c *gin.Context) {
 	deleteResource[models.Invite](c, nil)
 }

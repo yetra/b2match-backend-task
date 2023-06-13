@@ -11,12 +11,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GET /event/:id/meetings
+// GetEventMeetings godoc
+//
+// @Summary      Get event meetings
+// @Description  Responds with a list of the events's meetings as JSON.
+// @Tags         events
+// @Produce      json
+// @Param		 id	path int true "Event ID"
+// @Success      200	{array}		models.Meeting
+// @Failure      404	{object}	gin.H
+// @Failure      500	{object}	gin.H
+// @Router       /events/{id}/meetings [get]
 func GetEventMeetings(c *gin.Context) {
 	getNestedResources[models.Event, models.Meeting](c, "Meetings")
 }
 
-// POST /events/:id/meetings
+// CreateEventMeeting godoc
+//
+// @Summary      Create a new event meetings
+// @Description  Creates a meeting for the event specified by id and stores it in the database. Returns the new meeting.
+// @Tags         meetings
+// @Accept       json
+// @Produce      json
+// @Success      201 	{object}	models.Meeting
+// @Failure      400 	{object}	gin.H
+// @Failure      500 	{object}	gin.H
+// @Router       /events/{id}/meetings [post]
 func CreateEventMeeting(c *gin.Context) {
 	var input dto.NewMeetingJSON
 	if err := bindJSON(c, &input); err != nil {
@@ -48,12 +68,32 @@ func CreateEventMeeting(c *gin.Context) {
 	createResource(c, &meeting)
 }
 
-// GET /meetings/:id
+// GetMeetingByID godoc
+//
+// @Summary		 Get a single meeting by id
+// @Description	 Returns the meeting whose ID value matches the id parameter.
+// @Tags		 meetings
+// @Produce		 json
+// @Param		 id path int true "Meeting ID"
+// @Success		 200	{object}	models.Meeting
+// @Failure		 404	{object}	gin.H
+// @Router		 /meetings/{id} [get]
 func GetMeetingByID(c *gin.Context) {
 	getResourceByID[models.Meeting](c)
 }
 
-// PATCH /meetings/:id/schedule
+// ScheduleMeeting godoc
+//
+// @Summary		 Schedule a meeting
+// @Description	 Marks a meeting as scheduled if all its invites are accepted. Returns the scheduled meeting.
+// @Tags		 meetings
+// @Produce		 json
+// @Param		 id path int true "Meeting ID"
+// @Success		 200	{object}	models.Meeting
+// @Failure		 400	{object}	gin.H
+// @Failure		 404	{object}	gin.H
+// @Failure		 422	{object}	gin.H
+// @Router		 /meetings/{id}/schedule [patch]
 func ScheduleMeeting(c *gin.Context) {
 	var meeting models.Meeting
 	if err := findResourceByID(c, &meeting, c.Param("id")); err != nil {
@@ -82,7 +122,17 @@ func ScheduleMeeting(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-// DELETE /meetings/:id
+// DeleteMeeting godoc
+//
+// @Summary      Deletes a meeting
+// @Description  Deletes a meeting and its invites.
+// @Tags         meetings
+// @Accept       json
+// @Produce      json
+// @Param		 id	path int true "Meeting ID"
+// @Success      204  {object}  nil
+// @Failure      404  {object}  gin.H
+// @Router       /meetings/{id} [delete]
 func DeleteMeeting(c *gin.Context) {
 	deleteResource[models.Meeting](c, "Invites")
 }
