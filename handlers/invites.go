@@ -45,7 +45,16 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	if err := checkMeetingConflicts(invite.InviteeID, invite.MeetingID); err != nil {
+	var meeting models.Meeting
+	if err := findResourceByID(c, &meeting, invite.MeetingID); err != nil {
+		return
+	}
+
+	if err := checkMeetingNotAlreadyScheduled(meeting); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
+		return
+	}
+	if err := checkMeetingConflicts(invite.InviteeID, meeting); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
 		return
 	}
