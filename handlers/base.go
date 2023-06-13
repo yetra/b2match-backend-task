@@ -100,14 +100,14 @@ func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *
 	c.JSON(http.StatusOK, *resource)
 }
 
-func deleteResource[R resource](c *gin.Context) {
+func deleteResource[R resource](c *gin.Context, selectQuery interface{}) {
 	var resource R
 	if err := database.DB.First(&resource, c.Param("id")).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return
 	}
 
-	database.DB.Delete(&resource)
+	database.DB.Select(selectQuery).Delete(&resource)
 
 	c.Status(http.StatusNoContent)
 }

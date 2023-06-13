@@ -60,7 +60,7 @@ func UpdateCompany(c *gin.Context) {
 
 // DELETE /companies/:id
 func DeleteCompany(c *gin.Context) {
-	deleteResource[models.Company](c)
+	deleteResource[models.Company](c, "Representatives")
 }
 
 // GET /company/:id/representatives

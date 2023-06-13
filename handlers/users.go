@@ -116,5 +116,5 @@ func UpdateUser(c *gin.Context) {
 
 // DELETE /users/:id
 func DeleteUser(c *gin.Context) {
-	deleteResource[models.User](c)
+	deleteResource[models.User](c, []string{"OrganizedMeetings", "Invites"})
 }

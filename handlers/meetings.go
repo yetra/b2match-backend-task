@@ -85,5 +85,5 @@ func ScheduleMeeting(c *gin.Context) {
 
 // DELETE /meetings/:id
 func DeleteMeeting(c *gin.Context) {
-	deleteResource[models.Meeting](c)
+	deleteResource[models.Meeting](c, "Invites")
 }

@@ -85,7 +85,7 @@ func RespondToInvite(c *gin.Context) {
 
 // DELETE /invites/:id
 func DeleteInvite(c *gin.Context) {
-	deleteResource[models.Invite](c)
+	deleteResource[models.Invite](c, nil)
 }
 
 func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {

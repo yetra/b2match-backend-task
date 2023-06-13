@@ -72,7 +72,7 @@ func UpdateEvent(c *gin.Context) {
 
 // DELETE /events/:id
 func DeleteEvent(c *gin.Context) {
-	deleteResource[models.Event](c)
+	deleteResource[models.Event](c, "Meetings")
 }
 
 // POST /events/:id/join
