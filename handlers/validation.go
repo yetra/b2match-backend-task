@@ -15,6 +15,14 @@ func checkNewMeetingIsDuringEvent(meeting dto.NewMeetingJSON, event models.Event
 	return errors.New("meeting must happen during the event")
 }
 
+func checkMeetingNotAlreadyScheduled(meeting models.Meeting) error {
+	if meeting.Scheduled {
+		return errors.New("meeting is already scheduled")
+	}
+
+	return nil
+}
+
 func checkInviteeIsNotOrganizer(inviteeID uint, organizerID uint) error {
 	if inviteeID == organizerID {
 		return errors.New("cannot invite the meeting organizer")

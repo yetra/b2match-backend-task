@@ -116,6 +116,11 @@ func CreateMeetingInvite(c *gin.Context) {
 		return
 	}
 
+	if err := checkMeetingNotAlreadyScheduled(meeting); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
+		return
+	}
+
 	var invitee models.User
 	if err := findResourceByID(c, &invitee, input.InviteeID); err != nil {
 		return
