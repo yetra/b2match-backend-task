@@ -100,7 +100,7 @@ func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
 
 func checkInviteeNotAlreadyInvited(inviteeID uint, invites []models.Invite) error {
 	for _, invite := range invites {
-		if inviteeID == invite.ID {
+		if inviteeID == invite.InviteeID {
 			return errors.New("invitee already invited to meeting")
 		}
 	}
