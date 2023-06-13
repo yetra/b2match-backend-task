@@ -17,6 +17,7 @@ func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Invite{})
 }
 
+// SetUpDB opens an SQLite database with the given DSN, and applies all migrations.
 func SetUpDB(dsn string, config *gorm.Config) {
 	db, err := gorm.Open(sqlite.Open(dsn), config)
 
