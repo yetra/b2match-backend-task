@@ -26,7 +26,7 @@ func GetMeetingByID(c *gin.Context) {
 
 // DeleteMeeting godoc
 //
-// @Summary      Deletes a meeting
+// @Summary      Delete a meeting
 // @Description  Deletes a meeting and its invites.
 // @Tags         meetings
 // @Accept       json

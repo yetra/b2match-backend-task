@@ -499,7 +499,7 @@ const docTemplate = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Create a new event meetings",
+                "summary": "Create a new event meeting",
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -761,7 +761,7 @@ const docTemplate = `{
                 "tags": [
                     "meetings"
                 ],
-                "summary": "Deletes a meeting",
+                "summary": "Delete a meeting",
                 "parameters": [
                     {
                         "type": "integer",

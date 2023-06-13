@@ -175,7 +175,7 @@ func GetEventMeetings(c *gin.Context) {
 
 // CreateEventMeeting godoc
 //
-// @Summary      Create a new event meetings
+// @Summary      Create a new event meeting
 // @Description  Creates a meeting for the event specified by id and stores it in the database. Returns the new meeting.
 // @Tags         events
 // @Accept       json
