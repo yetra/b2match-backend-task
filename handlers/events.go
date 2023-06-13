@@ -114,7 +114,7 @@ func DeleteEvent(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param		 id	path int true "Event ID"
-// @Success      201  {object}  nil
+// @Success      204  {object}  nil
 // @Failure      400  {object}  dto.Error
 // @Failure      404  {object}  dto.Error
 // @Router       /events/{id}/join [post]
@@ -140,7 +140,7 @@ func JoinEvent(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusCreated)
+	c.Status(http.StatusNoContent)
 }
 
 // GetEventParticipants godoc
