@@ -130,7 +130,7 @@ func CreateMeetingInvite(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
 		return
 	}
-	if err := checkInviteeIsAParticipant(invitee.ID, meeting.EventID); err != nil {
+	if err := checkUserIsAParticipant(invitee.ID, meeting.EventID); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
 		return
 	}

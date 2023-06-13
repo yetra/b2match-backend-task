@@ -31,7 +31,7 @@ func checkInviteeIsNotOrganizer(inviteeID uint, organizerID uint) error {
 	return nil
 }
 
-func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
+func checkUserIsAParticipant(userID uint, eventID uint) error {
 	var event models.Event
 
 	err := database.DB.Preload("Participants").First(&event, eventID).Error
@@ -40,12 +40,12 @@ func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
 	}
 
 	for _, participant := range event.Participants {
-		if participant.ID == inviteeID {
+		if participant.ID == userID {
 			return nil
 		}
 	}
 
-	return errors.New("invitee is not an event participant")
+	return errors.New("user is not an event participant")
 }
 
 func checkInviteeNotAlreadyInvited(inviteeID uint, meetingID uint) error {
