@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"b2match/backend/database"
@@ -24,6 +25,11 @@ func CreateEventMeeting(c *gin.Context) {
 
 	var event models.Event
 	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
+		return
+	}
+
+	if err := checkNewMeetingIsDuringEvent(newMeeting, event); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -79,4 +85,12 @@ func ScheduleMeeting(c *gin.Context) {
 // DELETE /meetings/:id
 func DeleteMeeting(c *gin.Context) {
 	deleteResource[models.Meeting](c, "Invites")
+}
+
+func checkNewMeetingIsDuringEvent(meeting dto.NewMeetingJSON, event models.Event) error {
+	if meeting.StartTime.After(event.StartDate) && meeting.EndTime.Before(event.EndDate) {
+		return nil
+	}
+
+	return errors.New("meeting must happen during the event")
 }
