@@ -497,7 +497,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "meetings"
+                    "events"
                 ],
                 "summary": "Create a new event meetings",
                 "responses": {
@@ -1249,9 +1249,9 @@ const docTemplate = `{
                 2
             ],
             "x-enum-varnames": [
-                "Pending",
-                "Accepted",
-                "Declined"
+                "StatusPending",
+                "StatusAccepted",
+                "StatusDeclined"
             ]
         },
         "models.User": {

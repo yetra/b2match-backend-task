@@ -75,9 +75,9 @@ definitions:
     - 2
     type: integer
     x-enum-varnames:
-    - Pending
-    - Accepted
-    - Declined
+    - StatusPending
+    - StatusAccepted
+    - StatusDeclined
   models.User:
     properties:
       about:
@@ -443,7 +443,7 @@ paths:
             $ref: '#/definitions/dto.Error'
       summary: Create a new event meetings
       tags:
-      - meetings
+      - events
   /events/{id}/participants:
     get:
       description: Responds with a list of event participants as JSON.
