@@ -17,7 +17,7 @@ func checkNewMeetingIsDuringEvent(meeting dto.NewMeetingJSON, event models.Event
 
 func checkInviteeIsNotOrganizer(inviteeID uint, organizerID uint) error {
 	if inviteeID == organizerID {
-		return errors.New("the invitee is the meeting organizer")
+		return errors.New("cannot invite the meeting organizer")
 	}
 
 	return nil
@@ -37,7 +37,7 @@ func checkInviteeIsAParticipant(inviteeID uint, eventID uint) error {
 		}
 	}
 
-	return errors.New("the invitee is not an event participant")
+	return errors.New("invitee is not an event participant")
 }
 
 func checkInviteeNotAlreadyInvited(inviteeID uint, meetingID uint) error {
