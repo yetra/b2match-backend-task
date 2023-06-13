@@ -14,7 +14,7 @@ type User struct {
 
 	CompanyID uint `gorm:"not null;<-:create" json:"company_id" binding:"required"`
 
-	Events []Event `gorm:"many2many:event_participants;" json:"events"`
+	Events []Event `gorm:"many2many:event_participants;" json:"-"`
 
 	OrganizedMeetings []Meeting `gorm:"foreignKey:OrganizerID;constraint:OnDelete:CASCADE" json:"-"`
 	Invites           []Invite  `gorm:"foreignKey:InviteeID;constraint:OnDelete:CASCADE" json:"-"`
