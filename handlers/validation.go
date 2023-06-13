@@ -65,17 +65,12 @@ func checkInviteeNotAlreadyInvited(inviteeID uint, meetingID uint) error {
 	return nil
 }
 
-func checkMeetingConflicts(inviteeID uint, meetingID uint) error {
+func checkMeetingConflicts(inviteeID uint, meeting models.Meeting) error {
 	var acceptedInvites []models.Invite
 
 	whereClause := "invitee_id = ? AND status = ?"
 	err := database.DB.Find(&acceptedInvites, whereClause, inviteeID, models.StatusAccepted).Error
 	if err != nil {
-		return err
-	}
-
-	var meeting models.Meeting
-	if err := database.DB.First(&meeting, meetingID).Error; err != nil {
 		return err
 	}
 
