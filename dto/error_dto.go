@@ -1,5 +1,5 @@
 package dto
 
 type Error struct {
-	Errors string
+	Errors string `json:"errors"`
 }
