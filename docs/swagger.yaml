@@ -1,0 +1,856 @@
+definitions:
+  dto.Error:
+    properties:
+      errors:
+        type: string
+    type: object
+  models.Company:
+    properties:
+      about:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  models.Event:
+    properties:
+      agenda:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      start_date:
+        type: string
+    required:
+    - end_date
+    - name
+    - start_date
+    type: object
+  models.Invite:
+    properties:
+      id:
+        type: integer
+      invitee_id:
+        type: integer
+      meeting_id:
+        type: integer
+      status:
+        $ref: '#/definitions/models.Status'
+    required:
+    - invitee_id
+    type: object
+  models.Meeting:
+    properties:
+      end_time:
+        type: string
+      event_id:
+        type: integer
+      id:
+        type: integer
+      organizer_id:
+        type: integer
+      scheduled:
+        type: boolean
+      start_time:
+        type: string
+    required:
+    - end_time
+    - organizer_id
+    - start_time
+    type: object
+  models.Status:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - StatusPending
+    - StatusAccepted
+    - StatusDeclined
+  models.User:
+    properties:
+      about:
+        type: string
+      company_id:
+        type: integer
+      e_mail:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      location:
+        type: string
+      password:
+        type: string
+    required:
+    - company_id
+    - e_mail
+    - first_name
+    - last_name
+    - password
+    type: object
+info:
+  contact: {}
+paths:
+  /companies:
+    get:
+      description: Responds with a list of all companies as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Company'
+            type: array
+      summary: Get companies
+      tags:
+      - companies
+    post:
+      consumes:
+      - application/json
+      description: Creates a company from the input JSON and stores it in the database.
+        Returns the new company.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Create a new company
+      tags:
+      - companies
+  /companies/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a company and its representatives.
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Delete a company
+      tags:
+      - companies
+    get:
+      description: Returns the company whose ID value matches the id parameter.
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Company'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get a single company by id
+      tags:
+      - companies
+    patch:
+      consumes:
+      - application/json
+      description: Updates a company with the input JSON. Returns the updated company.
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Update an existing company
+      tags:
+      - companies
+  /companies/{id}/representatives:
+    get:
+      description: Responds with a list of company representatives as JSON.
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get company representatives
+      tags:
+      - companies
+  /events:
+    get:
+      description: Responds with a list of all events as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Event'
+            type: array
+      summary: Get events
+      tags:
+      - events
+    post:
+      consumes:
+      - application/json
+      description: Creates an event from the input JSON and stores it in the database.
+        Returns the new event.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Event'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Create a new event
+      tags:
+      - events
+  /events/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an event and its meetings.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Delete an event
+      tags:
+      - events
+    get:
+      description: Returns the event whose ID value matches the id parameter.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get a single event by id
+      tags:
+      - events
+    patch:
+      consumes:
+      - application/json
+      description: Updates an event with the input JSON. Returns the updated event.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Event'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Update an existing event
+      tags:
+      - events
+  /events/{id}/join:
+    post:
+      consumes:
+      - application/json
+      description: Adds the user specified in the request JSON to the event's participants.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Join an event
+      tags:
+      - events
+  /events/{id}/meetings:
+    get:
+      description: Responds with a list of the events's meetings as JSON.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Meeting'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get event meetings
+      tags:
+      - events
+    post:
+      consumes:
+      - application/json
+      description: Creates a meeting for the event specified by id and stores it in
+        the database. Returns the new meeting.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Meeting'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Create a new event meeting
+      tags:
+      - events
+  /events/{id}/participants:
+    get:
+      description: Responds with a list of event participants as JSON.
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get event participants
+      tags:
+      - events
+  /invites/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes an invite specified by id.
+      parameters:
+      - description: Invite ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Delete an invite
+      tags:
+      - invites
+    get:
+      description: Returns the invite whose ID value matches the id parameter.
+      parameters:
+      - description: Invite ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Invite'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get a single invite by id
+      tags:
+      - invites
+  /invites/{id}/rsvp:
+    patch:
+      description: Updates an invite's status with the request JSON. Returns the updated
+        invite.
+      parameters:
+      - description: Invite ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Invite'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Respond to an invite
+      tags:
+      - invites
+  /meeting/{id}/invites:
+    post:
+      consumes:
+      - application/json
+      description: Creates an invite for the meeting specified by id and stores it
+        in the database. Returns the new invite.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Invite'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Create a new meeting invite
+      tags:
+      - meetings
+  /meetings/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a meeting and its invites.
+      parameters:
+      - description: Meeting ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Delete a meeting
+      tags:
+      - meetings
+    get:
+      description: Returns the meeting whose ID value matches the id parameter.
+      parameters:
+      - description: Meeting ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Meeting'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get a single meeting by id
+      tags:
+      - meetings
+  /meetings/{id}/invites:
+    get:
+      description: Responds with a list of the meeting's invites as JSON.
+      parameters:
+      - description: Meeting ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Invite'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get meeting invites
+      tags:
+      - meetings
+  /meetings/{id}/schedule:
+    patch:
+      description: Marks a meeting as scheduled if all its invites are accepted. Returns
+        the scheduled meeting.
+      parameters:
+      - description: Meeting ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Meeting'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Schedule a meeting
+      tags:
+      - meetings
+  /users:
+    get:
+      description: Responds with a list of all users as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: Get users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Creates a user from the input JSON and stores it in the database.
+        Returns the new user.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Create a new user
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a user, its organized meetings, and invites.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Delete a user
+      tags:
+      - users
+    get:
+      description: Returns the user whose ID value matches the id parameter.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get a single user by id
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Updates a user with the input JSON. Returns the updated user.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Update an existing user
+      tags:
+      - users
+  /users/{id}/invites:
+    get:
+      description: Responds with a list of the user's meeting invites as JSON.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Invite'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get user invites
+      tags:
+      - users
+  /users/{id}/scheduled-meetings:
+    get:
+      description: Responds with a list of the user's scheduled meetings as JSON.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Meeting'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      summary: Get user scheduled meetings
+      tags:
+      - users
+swagger: "2.0"
