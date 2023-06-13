@@ -9,8 +9,8 @@ import (
 
 var DB *gorm.DB
 
-func SetUpDB() {
-	db, err := gorm.Open(sqlite.Open("b2match.db"), &gorm.Config{})
+func SetUpDB(dsn string) {
+	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic("failed to connect to database")

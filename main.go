@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	database.SetUpDB()
+	database.SetUpDB("b2match.db")
 
 	router := gin.Default()
 
