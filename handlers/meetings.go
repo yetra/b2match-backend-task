@@ -19,8 +19,8 @@ import (
 // @Produce      json
 // @Param		 id	path int true "Event ID"
 // @Success      200	{array}		models.Meeting
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /events/{id}/meetings [get]
 func GetEventMeetings(c *gin.Context) {
 	getNestedResources[models.Event, models.Meeting](c, "Meetings")
@@ -34,8 +34,8 @@ func GetEventMeetings(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Success      201 	{object}	models.Meeting
-// @Failure      400 	{object}	gin.H
-// @Failure      500 	{object}	gin.H
+// @Failure      400 	{object}	dto.Error
+// @Failure      500 	{object}	dto.Error
 // @Router       /events/{id}/meetings [post]
 func CreateEventMeeting(c *gin.Context) {
 	var input dto.NewMeetingJSON
@@ -49,7 +49,7 @@ func CreateEventMeeting(c *gin.Context) {
 	}
 
 	if err := checkNewMeetingIsDuringEvent(input, event); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusBadRequest, dto.Error{Errors: err.Error()})
 		return
 	}
 
@@ -76,7 +76,7 @@ func CreateEventMeeting(c *gin.Context) {
 // @Produce		 json
 // @Param		 id path int true "Meeting ID"
 // @Success		 200	{object}	models.Meeting
-// @Failure		 404	{object}	gin.H
+// @Failure		 404	{object}	dto.Error
 // @Router		 /meetings/{id} [get]
 func GetMeetingByID(c *gin.Context) {
 	getResourceByID[models.Meeting](c)
@@ -90,9 +90,9 @@ func GetMeetingByID(c *gin.Context) {
 // @Produce		 json
 // @Param		 id path int true "Meeting ID"
 // @Success		 200	{object}	models.Meeting
-// @Failure		 400	{object}	gin.H
-// @Failure		 404	{object}	gin.H
-// @Failure		 422	{object}	gin.H
+// @Failure		 400	{object}	dto.Error
+// @Failure		 404	{object}	dto.Error
+// @Failure		 422	{object}	dto.Error
 // @Router		 /meetings/{id}/schedule [patch]
 func ScheduleMeeting(c *gin.Context) {
 	var meeting models.Meeting
@@ -108,14 +108,14 @@ func ScheduleMeeting(c *gin.Context) {
 	for _, invite := range invites {
 		if invite.Status != models.Accepted {
 			err_message := "found an invite of status Pending or Rejected"
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err_message})
+			c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err_message})
 			return
 		}
 	}
 
 	err := database.DB.Model(&meeting).Update("Scheduled", true).Error
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.Error{Errors: err.Error()})
 		return
 	}
 
@@ -131,7 +131,7 @@ func ScheduleMeeting(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Meeting ID"
 // @Success      204  {object}  nil
-// @Failure      404  {object}  gin.H
+// @Failure      404  {object}  dto.Error
 // @Router       /meetings/{id} [delete]
 func DeleteMeeting(c *gin.Context) {
 	deleteResource[models.Meeting](c, "Invites")

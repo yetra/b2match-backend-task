@@ -20,7 +20,7 @@ type inputJSON interface {
 
 func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) error {
 	if err := database.DB.First(resource, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
 		return err
 	}
 
@@ -30,7 +30,7 @@ func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) e
 func findNestedResources[R, RNested resource](c *gin.Context, resource *R, nestedResources *[]RNested, assocName string) error {
 	err := database.DB.Model(resource).Association(assocName).Find(nestedResources)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
 		return err
 	}
 
@@ -39,7 +39,7 @@ func findNestedResources[R, RNested resource](c *gin.Context, resource *R, neste
 
 func bindJSON[J inputJSON](c *gin.Context, input *J) error {
 	if err := c.ShouldBindJSON(input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusBadRequest, dto.Error{Errors: err.Error()})
 		return err
 	}
 

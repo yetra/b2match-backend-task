@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"b2match/backend/database"
+	"b2match/backend/dto"
 	"b2match/backend/models"
 	"net/http"
 
@@ -48,7 +49,7 @@ func getResourceByID[R resource](c *gin.Context) {
 // POST /<resource>
 func createResource[R resource](c *gin.Context, resourceModel *R) {
 	if err := database.DB.Create(resourceModel).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.Error{Errors: err.Error()})
 		return
 	}
 
@@ -58,7 +59,7 @@ func createResource[R resource](c *gin.Context, resourceModel *R) {
 // PATCH /<resource>/:id
 func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *R, input *J) {
 	if err := database.DB.Model(resource).Updates(input).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.Error{Errors: err.Error()})
 		return
 	}
 
@@ -69,7 +70,7 @@ func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *
 func deleteResource[R resource](c *gin.Context, selectQuery interface{}) {
 	var resource R
 	if err := database.DB.First(&resource, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
 		return
 	}
 

@@ -29,7 +29,7 @@ func GetUsers(c *gin.Context) {
 // @Produce		 json
 // @Param		 id path int true "User ID"
 // @Success		 200	{object}	models.User
-// @Failure		 404	{object}	gin.H
+// @Failure		 404	{object}	dto.Error
 // @Router		 /users/{id} [get]
 func GetUserByID(c *gin.Context) {
 	getResourceByID[models.User](c)
@@ -43,8 +43,8 @@ func GetUserByID(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Success      201 	{object}	models.User
-// @Failure      400 	{object}	gin.H
-// @Failure      500 	{object}	gin.H
+// @Failure      400 	{object}	dto.Error
+// @Failure      500 	{object}	dto.Error
 // @Router       /users [post]
 func CreateUser(c *gin.Context) {
 	var input dto.NewUserJSON
@@ -78,8 +78,8 @@ func CreateUser(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "User ID"
 // @Success      200	{array}		models.Meeting
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /users/{id}/scheduled-meetings [get]
 func GetUserScheduledMeetings(c *gin.Context) {
 	var user models.User
@@ -116,8 +116,8 @@ func GetUserScheduledMeetings(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "User ID"
 // @Success      200	{array}		models.Invite
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /users/{id}/invites [get]
 func GetUserInvites(c *gin.Context) {
 	getNestedResources[models.User, models.Invite](c, "Invites")
@@ -132,9 +132,9 @@ func GetUserInvites(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "User ID"
 // @Success      200	{object}	models.User
-// @Failure      400	{object}	gin.H
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      400	{object}	dto.Error
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /users/{id} [patch]
 func UpdateUser(c *gin.Context) {
 	var user models.User
@@ -159,7 +159,7 @@ func UpdateUser(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "User ID"
 // @Success      204  {object}  nil
-// @Failure      404  {object}  gin.H
+// @Failure      404  {object}  dto.Error
 // @Router       /users/{id} [delete]
 func DeleteUser(c *gin.Context) {
 	deleteResource[models.User](c, []string{"OrganizedMeetings", "Invites"})

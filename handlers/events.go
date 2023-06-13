@@ -30,7 +30,7 @@ func GetEvents(c *gin.Context) {
 // @Produce		 json
 // @Param		 id path int true "Event ID"
 // @Success		 200	{object}	models.Event
-// @Failure		 404	{object}	gin.H
+// @Failure		 404	{object}	dto.Error
 // @Router		 /events/{id} [get]
 func GetEventByID(c *gin.Context) {
 	getResourceByID[models.Event](c)
@@ -44,8 +44,8 @@ func GetEventByID(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Success      201 	{object}	models.Event
-// @Failure      400 	{object}	gin.H
-// @Failure      500 	{object}	gin.H
+// @Failure      400 	{object}	dto.Error
+// @Failure      500 	{object}	dto.Error
 // @Router       /events [post]
 func CreateEvent(c *gin.Context) {
 	var input dto.NewEventJSON
@@ -73,9 +73,9 @@ func CreateEvent(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Event ID"
 // @Success      200	{object}	models.Event
-// @Failure      400	{object}	gin.H
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      400	{object}	dto.Error
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /events/{id} [patch]
 func UpdateEvent(c *gin.Context) {
 	var event models.Event
@@ -100,7 +100,7 @@ func UpdateEvent(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Event ID"
 // @Success      204  {object}  nil
-// @Failure      404  {object}  gin.H
+// @Failure      404  {object}  dto.Error
 // @Router       /events/{id} [delete]
 func DeleteEvent(c *gin.Context) {
 	deleteResource[models.Event](c, "Meetings")
@@ -115,8 +115,8 @@ func DeleteEvent(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Event ID"
 // @Success      201  {object}  nil
-// @Failure      400  {object}  gin.H
-// @Failure      404  {object}  gin.H
+// @Failure      400  {object}  dto.Error
+// @Failure      404  {object}  dto.Error
 // @Router       /events/{id}/join [post]
 func JoinEvent(c *gin.Context) {
 	var event models.Event
@@ -136,7 +136,7 @@ func JoinEvent(c *gin.Context) {
 
 	err := database.DB.Model(&event).Association("Participants").Append(&participant)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.Error{Errors: err.Error()})
 		return
 	}
 
@@ -151,8 +151,8 @@ func JoinEvent(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Event ID"
 // @Success      200	{array}		models.User
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /events/{id}/participants [get]
 func GetEventParticipants(c *gin.Context) {
 	getNestedResources[models.Event, models.User](c, "Participants")

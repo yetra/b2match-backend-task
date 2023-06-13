@@ -18,8 +18,8 @@ import (
 // @Produce      json
 // @Param		 id	path int true "Meeting ID"
 // @Success      200	{array}		models.Invite
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /meetings/{id}/invites [get]
 func GetMeetingInvites(c *gin.Context) {
 	getNestedResources[models.Meeting, models.Invite](c, "Invites")
@@ -33,8 +33,8 @@ func GetMeetingInvites(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Success      201 	{object}	models.Invite
-// @Failure      400 	{object}	gin.H
-// @Failure      500 	{object}	gin.H
+// @Failure      400 	{object}	dto.Error
+// @Failure      500 	{object}	dto.Error
 // @Router       /meeting/{id}/invites [post]
 func CreateMeetingInvite(c *gin.Context) {
 	var input dto.NewInviteJSON
@@ -53,15 +53,15 @@ func CreateMeetingInvite(c *gin.Context) {
 	}
 
 	if err := checkInviteeIsNotOrganizer(invitee.ID, meeting.OrganizerID); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
 		return
 	}
 	if err := checkInviteeIsAParticipant(invitee.ID, meeting.EventID); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
 		return
 	}
 	if err := checkInviteeNotAlreadyInvited(invitee.ID, meeting.ID); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
 		return
 	}
 
@@ -83,7 +83,7 @@ func CreateMeetingInvite(c *gin.Context) {
 // @Produce		 json
 // @Param		 id path int true "Invite ID"
 // @Success		 200	{object}	models.Invite
-// @Failure		 404	{object}	gin.H
+// @Failure		 404	{object}	dto.Error
 // @Router		 /invites/{id} [get]
 func GetInviteByID(c *gin.Context) {
 	getResourceByID[models.Meeting](c)
@@ -97,9 +97,9 @@ func GetInviteByID(c *gin.Context) {
 // @Produce		 json
 // @Param		 id path int true "Invite ID"
 // @Success		 200	{object}	models.Invite
-// @Failure		 400	{object}	gin.H
-// @Failure		 404	{object}	gin.H
-// @Failure		 422	{object}	gin.H
+// @Failure		 400	{object}	dto.Error
+// @Failure		 404	{object}	dto.Error
+// @Failure		 422	{object}	dto.Error
 // @Router		 /invites/{id}/rsvp [patch]
 func RespondToInvite(c *gin.Context) {
 	var input dto.RSVPJSON
@@ -113,7 +113,7 @@ func RespondToInvite(c *gin.Context) {
 	}
 
 	if err := checkMeetingConflicts(invite.InviteeID, invite.MeetingID); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"errors": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
 		return
 	}
 
@@ -129,7 +129,7 @@ func RespondToInvite(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Invite ID"
 // @Success      204  {object}  nil
-// @Failure      404  {object}  gin.H
+// @Failure      404  {object}  dto.Error
 // @Router       /invites/{id} [delete]
 func DeleteInvite(c *gin.Context) {
 	deleteResource[models.Invite](c, nil)

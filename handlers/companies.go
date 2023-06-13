@@ -27,7 +27,7 @@ func GetCompanies(c *gin.Context) {
 // @Produce		 json
 // @Param		 id path int true "Company ID"
 // @Success		 200	{object}	models.Company
-// @Failure		 404	{object}	gin.H
+// @Failure		 404	{object}	dto.Error
 // @Router		 /companies/{id} [get]
 func GetCompanyByID(c *gin.Context) {
 	getResourceByID[models.Company](c)
@@ -41,8 +41,8 @@ func GetCompanyByID(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Success      201 	{object}	models.Company
-// @Failure      400 	{object}	gin.H
-// @Failure      500 	{object}	gin.H
+// @Failure      400 	{object}	dto.Error
+// @Failure      500 	{object}	dto.Error
 // @Router       /companies [post]
 func CreateCompany(c *gin.Context) {
 	var input dto.NewCompanyJSON
@@ -68,9 +68,9 @@ func CreateCompany(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Company ID"
 // @Success      200	{object}	models.Company
-// @Failure      400	{object}	gin.H
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      400	{object}	dto.Error
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /companies/{id} [patch]
 func UpdateCompany(c *gin.Context) {
 	var company models.Company
@@ -95,7 +95,7 @@ func UpdateCompany(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Company ID"
 // @Success      204  {object}  nil
-// @Failure      404  {object}  gin.H
+// @Failure      404  {object}  dto.Error
 // @Router       /companies/{id} [delete]
 func DeleteCompany(c *gin.Context) {
 	deleteResource[models.Company](c, "Representatives")
@@ -109,8 +109,8 @@ func DeleteCompany(c *gin.Context) {
 // @Produce      json
 // @Param		 id	path int true "Company ID"
 // @Success      200	{array}		models.User
-// @Failure      404	{object}	gin.H
-// @Failure      500	{object}	gin.H
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
 // @Router       /companies/{id}/representatives [get]
 func GetCompanyRepresentatives(c *gin.Context) {
 	getNestedResources[models.Company, models.User](c, "Representatives")
