@@ -61,7 +61,7 @@ func checkMeetingConflicts(inviteeID uint, meetingID uint) error {
 	var acceptedInvites []models.Invite
 
 	whereClause := "invitee_id = ? AND status = ?"
-	err := database.DB.Find(&acceptedInvites, whereClause, inviteeID, models.Accepted).Error
+	err := database.DB.Find(&acceptedInvites, whereClause, inviteeID, models.StatusAccepted).Error
 	if err != nil {
 		return err
 	}
