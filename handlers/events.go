@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"b2match/backend/database"
@@ -156,4 +157,69 @@ func JoinEvent(c *gin.Context) {
 // @Router       /events/{id}/participants [get]
 func GetEventParticipants(c *gin.Context) {
 	getNestedResources[models.Event, models.User](c, "Participants")
+}
+
+// GetEventMeetings godoc
+//
+// @Summary      Get event meetings
+// @Description  Responds with a list of the events's meetings as JSON.
+// @Tags         events
+// @Produce      json
+// @Param		 id	path int true "Event ID"
+// @Success      200	{array}		models.Meeting
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
+// @Router       /events/{id}/meetings [get]
+func GetEventMeetings(c *gin.Context) {
+	getNestedResources[models.Event, models.Meeting](c, "Meetings")
+}
+
+// CreateEventMeeting godoc
+//
+// @Summary      Create a new event meetings
+// @Description  Creates a meeting for the event specified by id and stores it in the database. Returns the new meeting.
+// @Tags         meetings
+// @Accept       json
+// @Produce      json
+// @Success      201 	{object}	models.Meeting
+// @Failure      400 	{object}	dto.Error
+// @Failure      500 	{object}	dto.Error
+// @Router       /events/{id}/meetings [post]
+func CreateEventMeeting(c *gin.Context) {
+	var input dto.NewMeetingJSON
+	if err := bindJSON(c, &input); err != nil {
+		return
+	}
+
+	var event models.Event
+	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
+		return
+	}
+
+	if err := checkNewMeetingIsDuringEvent(input, event); err != nil {
+		c.JSON(http.StatusBadRequest, dto.Error{Errors: err.Error()})
+		return
+	}
+
+	var organizer models.User
+	if err := findResourceByID(c, &organizer, input.OrganizerID); err != nil {
+		return
+	}
+
+	meeting := models.Meeting{
+		StartTime:   input.StartTime,
+		EndTime:     input.EndTime,
+		EventID:     event.ID,
+		OrganizerID: organizer.ID,
+	}
+
+	createResource(c, &meeting)
+}
+
+func checkNewMeetingIsDuringEvent(meeting dto.NewMeetingJSON, event models.Event) error {
+	if meeting.StartTime.After(event.StartDate) && meeting.EndTime.Before(event.EndDate) {
+		return nil
+	}
+
+	return errors.New("meeting must happen during the event")
 }
