@@ -96,7 +96,7 @@ func GetUserScheduledMeetings(c *gin.Context) {
 	for _, invite := range invites {
 
 		var meeting models.Meeting
-		if err := findResourceByID(c, &invite, invite.MeetingID); err != nil {
+		if err := findResourceByID(c, &meeting, invite.MeetingID); err != nil {
 			return
 		}
 
