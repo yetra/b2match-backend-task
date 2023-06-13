@@ -17,8 +17,8 @@ func GetMeetingInvites(c *gin.Context) {
 
 // POST /meetings/:id/invites
 func CreateMeetingInvite(c *gin.Context) {
-	var inviteData dto.NewInviteJSON
-	if err := bindJSON(c, &inviteData); err != nil {
+	var input dto.NewInviteJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
@@ -28,7 +28,7 @@ func CreateMeetingInvite(c *gin.Context) {
 	}
 
 	var invitee models.User
-	if err := findResourceByID(c, &invitee, inviteData.InviteeID); err != nil {
+	if err := findResourceByID(c, &invitee, input.InviteeID); err != nil {
 		return
 	}
 
@@ -62,8 +62,8 @@ func GetInviteByID(c *gin.Context) {
 
 // PATCH /invites/:id/rsvp
 func RespondToInvite(c *gin.Context) {
-	var rsvpData dto.RSVPJSON
-	if err := bindJSON(c, &rsvpData); err != nil {
+	var input dto.RSVPJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
@@ -77,7 +77,7 @@ func RespondToInvite(c *gin.Context) {
 		return
 	}
 
-	updateResource(c, &invite, &rsvpData)
+	updateResource(c, &invite, &input)
 }
 
 // DELETE /invites/:id

@@ -18,8 +18,8 @@ func GetEventMeetings(c *gin.Context) {
 
 // POST /events/:id/meetings
 func CreateEventMeeting(c *gin.Context) {
-	var newMeeting dto.NewMeetingJSON
-	if err := bindJSON(c, &newMeeting); err != nil {
+	var input dto.NewMeetingJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
@@ -28,19 +28,19 @@ func CreateEventMeeting(c *gin.Context) {
 		return
 	}
 
-	if err := checkNewMeetingIsDuringEvent(newMeeting, event); err != nil {
+	if err := checkNewMeetingIsDuringEvent(input, event); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
 		return
 	}
 
 	var organizer models.User
-	if err := findResourceByID(c, &organizer, newMeeting.OrganizerID); err != nil {
+	if err := findResourceByID(c, &organizer, input.OrganizerID); err != nil {
 		return
 	}
 
 	meeting := models.Meeting{
-		StartTime:   newMeeting.StartTime,
-		EndTime:     newMeeting.EndTime,
+		StartTime:   input.StartTime,
+		EndTime:     input.EndTime,
 		EventID:     event.ID,
 		OrganizerID: organizer.ID,
 	}

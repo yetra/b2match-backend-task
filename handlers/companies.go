@@ -19,15 +19,15 @@ func GetCompanyByID(c *gin.Context) {
 
 // POST /companies
 func CreateCompany(c *gin.Context) {
-	var newCompany dto.NewCompanyJSON
-	if err := bindJSON(c, &newCompany); err != nil {
+	var input dto.NewCompanyJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
 	company := models.Company{
-		Name:     newCompany.Name,
-		Location: newCompany.Location,
-		About:    newCompany.About,
+		Name:     input.Name,
+		Location: input.Location,
+		About:    input.About,
 	}
 
 	createResource(c, &company)
@@ -40,12 +40,12 @@ func UpdateCompany(c *gin.Context) {
 		return
 	}
 
-	var updatedCompany dto.UpdateCompanyJSON
-	if err := bindJSON(c, &updatedCompany); err != nil {
+	var input dto.UpdateCompanyJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
-	updateResource(c, &company, &updatedCompany)
+	updateResource(c, &company, &input)
 }
 
 // DELETE /companies/:id

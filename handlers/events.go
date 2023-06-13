@@ -22,17 +22,17 @@ func GetEventByID(c *gin.Context) {
 
 // POST /events
 func CreateEvent(c *gin.Context) {
-	var newEvent dto.NewEventJSON
-	if err := bindJSON(c, &newEvent); err != nil {
+	var input dto.NewEventJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
 	event := models.Event{
-		Name:      newEvent.Name,
-		Location:  newEvent.Location,
-		Agenda:    newEvent.Agenda,
-		StartDate: newEvent.StartDate,
-		EndDate:   newEvent.EndDate,
+		Name:      input.Name,
+		Location:  input.Location,
+		Agenda:    input.Agenda,
+		StartDate: input.StartDate,
+		EndDate:   input.EndDate,
 	}
 
 	createResource(c, &event)
@@ -45,12 +45,12 @@ func UpdateEvent(c *gin.Context) {
 		return
 	}
 
-	var updatedEvent dto.UpdateEventJSON
-	if err := bindJSON(c, &updatedEvent); err != nil {
+	var input dto.UpdateEventJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
-	updateResource(c, &event, &updatedEvent)
+	updateResource(c, &event, &input)
 }
 
 // DELETE /events/:id
@@ -65,13 +65,13 @@ func JoinEvent(c *gin.Context) {
 		return
 	}
 
-	var joinData dto.JoinEventJSON
-	if err := bindJSON(c, &joinData); err != nil {
+	var input dto.JoinEventJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
 	var participant models.User
-	if err := findResourceByID(c, &participant, joinData.ID); err != nil {
+	if err := findResourceByID(c, &participant, input.ID); err != nil {
 		return
 	}
 

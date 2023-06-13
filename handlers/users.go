@@ -21,23 +21,23 @@ func GetUserByID(c *gin.Context) {
 
 // POST /users
 func CreateUser(c *gin.Context) {
-	var newUser dto.NewUserJSON
-	if err := bindJSON(c, &newUser); err != nil {
+	var input dto.NewUserJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
 	var company models.Company
-	if err := findResourceByID(c, &company, newUser.CompanyID); err != nil {
+	if err := findResourceByID(c, &company, input.CompanyID); err != nil {
 		return
 	}
 
 	user := models.User{
-		FirstName: newUser.FirstName,
-		LastName:  newUser.LastName,
-		Location:  newUser.Location,
-		About:     newUser.About,
-		EMail:     newUser.EMail,
-		Password:  newUser.Password,
+		FirstName: input.FirstName,
+		LastName:  input.LastName,
+		Location:  input.Location,
+		About:     input.About,
+		EMail:     input.EMail,
+		Password:  input.Password,
 		CompanyID: company.ID,
 	}
 
@@ -84,12 +84,12 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	var updatedUser dto.UpdateUserJSON
-	if err := bindJSON(c, &updatedUser); err != nil {
+	var input dto.UpdateUserJSON
+	if err := bindJSON(c, &input); err != nil {
 		return
 	}
 
-	updateResource(c, &user, &updatedUser)
+	updateResource(c, &user, &input)
 }
 
 // DELETE /users/:id
