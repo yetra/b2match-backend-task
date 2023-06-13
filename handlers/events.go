@@ -2,30 +2,13 @@ package handlers
 
 import (
 	"net/http"
-	"time"
 
 	"b2match/backend/database"
+	"b2match/backend/dto"
 	"b2match/backend/models"
 
 	"github.com/gin-gonic/gin"
 )
-
-type newEventJSON struct {
-	Name     string `binding:"required"`
-	Location string
-	Agenda   string
-
-	StartDate time.Time `binding:"required,ltefield=EndDate" json:"start_date"`
-	EndDate   time.Time `binding:"required" json:"end_date"`
-}
-
-type updateEventJSON struct {
-	Agenda string
-}
-
-type joinEventJSON struct {
-	ID uint `binding:"required" json:"id"`
-}
 
 // GET /events
 func GetEvents(c *gin.Context) {
@@ -39,7 +22,7 @@ func GetEventByID(c *gin.Context) {
 
 // POST /events
 func CreateEvent(c *gin.Context) {
-	var newEvent newEventJSON
+	var newEvent dto.NewEventJSON
 	if err := bindJSON(c, &newEvent); err != nil {
 		return
 	}
@@ -62,7 +45,7 @@ func UpdateEvent(c *gin.Context) {
 		return
 	}
 
-	var updatedEvent updateEventJSON
+	var updatedEvent dto.UpdateEventJSON
 	if err := bindJSON(c, &updatedEvent); err != nil {
 		return
 	}
@@ -82,7 +65,7 @@ func JoinEvent(c *gin.Context) {
 		return
 	}
 
-	var joinData joinEventJSON
+	var joinData dto.JoinEventJSON
 	if err := bindJSON(c, &joinData); err != nil {
 		return
 	}

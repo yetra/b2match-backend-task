@@ -2,20 +2,13 @@ package handlers
 
 import (
 	"b2match/backend/database"
+	"b2match/backend/dto"
 	"b2match/backend/models"
 	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
-
-type newInviteJSON struct {
-	InviteeID uint `binding:"required" json:"invitee_id"`
-}
-
-type rsvpJSON struct {
-	Status models.Status `binding:"required,min=1,max=2" json:"status"`
-}
 
 // GET /meetings/:id/invites
 func GetMeetingInvites(c *gin.Context) {
@@ -24,7 +17,7 @@ func GetMeetingInvites(c *gin.Context) {
 
 // POST /meetings/:id/invites
 func CreateMeetingInvite(c *gin.Context) {
-	var inviteData newInviteJSON
+	var inviteData dto.NewInviteJSON
 	if err := bindJSON(c, &inviteData); err != nil {
 		return
 	}
@@ -65,7 +58,7 @@ func GetInviteByID(c *gin.Context) {
 
 // PATCH /invites/:id/rsvp
 func RespondToInvite(c *gin.Context) {
-	var rsvpData rsvpJSON
+	var rsvpData dto.RSVPJSON
 	if err := bindJSON(c, &rsvpData); err != nil {
 		return
 	}

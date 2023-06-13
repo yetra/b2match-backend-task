@@ -1,21 +1,11 @@
 package handlers
 
 import (
+	"b2match/backend/dto"
 	"b2match/backend/models"
 
 	"github.com/gin-gonic/gin"
 )
-
-type newCompanyJSON struct {
-	Name     string `binding:"required"`
-	Location string `binding:"required"`
-	About    string
-}
-
-type updateCompanyJSON struct {
-	Location string
-	About    string
-}
 
 // GET /companies
 func GetCompanies(c *gin.Context) {
@@ -29,7 +19,7 @@ func GetCompanyByID(c *gin.Context) {
 
 // POST /companies
 func CreateCompany(c *gin.Context) {
-	var newCompany newCompanyJSON
+	var newCompany dto.NewCompanyJSON
 	if err := bindJSON(c, &newCompany); err != nil {
 		return
 	}
@@ -50,7 +40,7 @@ func UpdateCompany(c *gin.Context) {
 		return
 	}
 
-	var updatedCompany updateCompanyJSON
+	var updatedCompany dto.UpdateCompanyJSON
 	if err := bindJSON(c, &updatedCompany); err != nil {
 		return
 	}

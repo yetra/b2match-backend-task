@@ -2,20 +2,13 @@ package handlers
 
 import (
 	"net/http"
-	"time"
 
 	"b2match/backend/database"
+	"b2match/backend/dto"
 	"b2match/backend/models"
 
 	"github.com/gin-gonic/gin"
 )
-
-type newMeetingJSON struct {
-	StartTime time.Time `binding:"required,ltefield=EndTime" json:"start_time"`
-	EndTime   time.Time `binding:"required" json:"end_time"`
-
-	OrganizerID uint `binding:"required" json:"organizer_id"`
-}
 
 // GET /event/:id/meetings
 func GetEventMeetings(c *gin.Context) {
@@ -24,7 +17,7 @@ func GetEventMeetings(c *gin.Context) {
 
 // POST /events/:id/meetings
 func CreateEventMeeting(c *gin.Context) {
-	var newMeeting newMeetingJSON
+	var newMeeting dto.NewMeetingJSON
 	if err := bindJSON(c, &newMeeting); err != nil {
 		return
 	}

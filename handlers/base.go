@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"b2match/backend/database"
+	"b2match/backend/dto"
 	"b2match/backend/models"
 	"net/http"
 
@@ -13,15 +14,13 @@ type resource interface {
 }
 
 type newResourceJSON interface {
-	newCompanyJSON | newUserJSON | newEventJSON | newMeetingJSON | newInviteJSON
+	dto.NewCompanyJSON | dto.NewUserJSON | dto.NewEventJSON | dto.NewMeetingJSON | dto.NewInviteJSON
 }
-
 type updateResourceJSON interface {
-	updateCompanyJSON | updateUserJSON | updateEventJSON | rsvpJSON
+	dto.UpdateCompanyJSON | dto.UpdateUserJSON | dto.UpdateEventJSON | dto.RSVPJSON
 }
-
 type inputJSON interface {
-	newResourceJSON | updateResourceJSON | joinEventJSON
+	newResourceJSON | updateResourceJSON | dto.JoinEventJSON
 }
 
 func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) error {

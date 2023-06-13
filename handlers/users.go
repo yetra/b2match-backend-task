@@ -3,33 +3,11 @@ package handlers
 import (
 	"net/http"
 
+	"b2match/backend/dto"
 	"b2match/backend/models"
 
 	"github.com/gin-gonic/gin"
 )
-
-type newUserJSON struct {
-	FirstName string `binding:"required" json:"first_name"`
-	LastName  string `binding:"required" json:"last_name"`
-
-	Location string
-	About    string
-
-	EMail    string `binding:"required" json:"e_mail"`
-	Password string `binding:"required"`
-
-	CompanyID uint `binding:"required" json:"company_id"`
-}
-
-type updateUserJSON struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-
-	Location string
-	About    string
-
-	Password string
-}
 
 // GET /users
 func GetUsers(c *gin.Context) {
@@ -43,7 +21,7 @@ func GetUserByID(c *gin.Context) {
 
 // POST /users
 func CreateUser(c *gin.Context) {
-	var newUser newUserJSON
+	var newUser dto.NewUserJSON
 	if err := bindJSON(c, &newUser); err != nil {
 		return
 	}
@@ -106,7 +84,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	var updatedUser updateUserJSON
+	var updatedUser dto.UpdateUserJSON
 	if err := bindJSON(c, &updatedUser); err != nil {
 		return
 	}
