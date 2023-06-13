@@ -205,6 +205,11 @@ func CreateEventMeeting(c *gin.Context) {
 		return
 	}
 
+	if err := checkUserIsAParticipant(organizer.ID, event.ID); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
+		return
+	}
+
 	meeting := models.Meeting{
 		StartTime:   input.StartTime,
 		EndTime:     input.EndTime,
