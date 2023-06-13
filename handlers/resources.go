@@ -12,6 +12,7 @@ type resource interface {
 	models.Company | models.User | models.Event | models.Meeting | models.Invite
 }
 
+// GET /<resource>
 func getResources[R resource](c *gin.Context) {
 	var resources []R
 	database.DB.Find(&resources)
@@ -19,6 +20,7 @@ func getResources[R resource](c *gin.Context) {
 	c.JSON(http.StatusOK, resources)
 }
 
+// GET /<resource>/:id/<nested_resource>
 func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 	var resource R
 	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
@@ -33,6 +35,7 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 	c.JSON(http.StatusOK, nestedResources)
 }
 
+// GET /<resource>/:id
 func getResourceByID[R resource](c *gin.Context) {
 	var resource R
 	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
@@ -42,6 +45,7 @@ func getResourceByID[R resource](c *gin.Context) {
 	c.JSON(http.StatusOK, resource)
 }
 
+// POST /<resource>
 func createResource[R resource](c *gin.Context, resourceModel *R) {
 	if err := database.DB.Create(resourceModel).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
@@ -51,6 +55,7 @@ func createResource[R resource](c *gin.Context, resourceModel *R) {
 	c.JSON(http.StatusCreated, *resourceModel)
 }
 
+// PATCH /<resource>/:id
 func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *R, input *J) {
 	if err := database.DB.Model(resource).Updates(input).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
@@ -60,6 +65,7 @@ func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *
 	c.JSON(http.StatusOK, *resource)
 }
 
+// DELETE /<resource>/:id
 func deleteResource[R resource](c *gin.Context, selectQuery interface{}) {
 	var resource R
 	if err := database.DB.First(&resource, c.Param("id")).Error; err != nil {
