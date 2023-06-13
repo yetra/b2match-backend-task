@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"net/http"
 
 	"b2match/backend/database"
@@ -214,12 +213,4 @@ func CreateEventMeeting(c *gin.Context) {
 	}
 
 	createResource(c, &meeting)
-}
-
-func checkNewMeetingIsDuringEvent(meeting dto.NewMeetingJSON, event models.Event) error {
-	if meeting.StartTime.After(event.StartDate) && meeting.EndTime.Before(event.EndDate) {
-		return nil
-	}
-
-	return errors.New("meeting must happen during the event")
 }
