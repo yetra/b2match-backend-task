@@ -22,6 +22,21 @@ func GetInviteByID(c *gin.Context) {
 	getResourceByID[models.Invite](c)
 }
 
+// DeleteInvite godoc
+//
+// @Summary      Delete an invite
+// @Description  Deletes an invite specified by id.
+// @Tags         invites
+// @Accept       json
+// @Produce      json
+// @Param		 id	path int true "Invite ID"
+// @Success      204  {object}  nil
+// @Failure      404  {object}  dto.Error
+// @Router       /invites/{id} [delete]
+func DeleteInvite(c *gin.Context) {
+	deleteResource[models.Invite](c, nil)
+}
+
 // RespondToInvite godoc
 //
 // @Summary		 Respond to an invite
@@ -60,19 +75,4 @@ func RespondToInvite(c *gin.Context) {
 	}
 
 	updateResource(c, &invite, &input)
-}
-
-// DeleteInvite godoc
-//
-// @Summary      Delete an invite
-// @Description  Deletes an invite specified by id.
-// @Tags         invites
-// @Accept       json
-// @Produce      json
-// @Param		 id	path int true "Invite ID"
-// @Success      204  {object}  nil
-// @Failure      404  {object}  dto.Error
-// @Router       /invites/{id} [delete]
-func DeleteInvite(c *gin.Context) {
-	deleteResource[models.Invite](c, nil)
 }

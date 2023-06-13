@@ -70,6 +70,48 @@ func CreateUser(c *gin.Context) {
 	createResource(c, &user)
 }
 
+// UpdateUser godoc
+//
+// @Summary      Update an existing user
+// @Description  Updates a user with the input JSON. Returns the updated user.
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param		 id	path int true "User ID"
+// @Success      200	{object}	models.User
+// @Failure      400	{object}	dto.Error
+// @Failure      404	{object}	dto.Error
+// @Failure      500	{object}	dto.Error
+// @Router       /users/{id} [patch]
+func UpdateUser(c *gin.Context) {
+	var user models.User
+	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
+		return
+	}
+
+	var input dto.UpdateUserJSON
+	if err := bindJSON(c, &input); err != nil {
+		return
+	}
+
+	updateResource(c, &user, &input)
+}
+
+// DeleteUser godoc
+//
+// @Summary      Delete a user
+// @Description  Deletes a user, its organized meetings, and invites.
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param		 id	path int true "User ID"
+// @Success      204  {object}  nil
+// @Failure      404  {object}  dto.Error
+// @Router       /users/{id} [delete]
+func DeleteUser(c *gin.Context) {
+	deleteResource[models.User](c, []string{"OrganizedMeetings", "Invites"})
+}
+
 // GetUserScheduledMeetings godoc
 //
 // @Summary      Get user scheduled meetings
@@ -121,46 +163,4 @@ func GetUserScheduledMeetings(c *gin.Context) {
 // @Router       /users/{id}/invites [get]
 func GetUserInvites(c *gin.Context) {
 	getNestedResources[models.User, models.Invite](c, "Invites")
-}
-
-// UpdateUser godoc
-//
-// @Summary      Update an existing user
-// @Description  Updates a user with the input JSON. Returns the updated user.
-// @Tags         users
-// @Accept       json
-// @Produce      json
-// @Param		 id	path int true "User ID"
-// @Success      200	{object}	models.User
-// @Failure      400	{object}	dto.Error
-// @Failure      404	{object}	dto.Error
-// @Failure      500	{object}	dto.Error
-// @Router       /users/{id} [patch]
-func UpdateUser(c *gin.Context) {
-	var user models.User
-	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
-		return
-	}
-
-	var input dto.UpdateUserJSON
-	if err := bindJSON(c, &input); err != nil {
-		return
-	}
-
-	updateResource(c, &user, &input)
-}
-
-// DeleteUser godoc
-//
-// @Summary      Delete a user
-// @Description  Deletes a user, its organized meetings, and invites.
-// @Tags         users
-// @Accept       json
-// @Produce      json
-// @Param		 id	path int true "User ID"
-// @Success      204  {object}  nil
-// @Failure      404  {object}  dto.Error
-// @Router       /users/{id} [delete]
-func DeleteUser(c *gin.Context) {
-	deleteResource[models.User](c, []string{"OrganizedMeetings", "Invites"})
 }

@@ -24,6 +24,21 @@ func GetMeetingByID(c *gin.Context) {
 	getResourceByID[models.Meeting](c)
 }
 
+// DeleteMeeting godoc
+//
+// @Summary      Deletes a meeting
+// @Description  Deletes a meeting and its invites.
+// @Tags         meetings
+// @Accept       json
+// @Produce      json
+// @Param		 id	path int true "Meeting ID"
+// @Success      204  {object}  nil
+// @Failure      404  {object}  dto.Error
+// @Router       /meetings/{id} [delete]
+func DeleteMeeting(c *gin.Context) {
+	deleteResource[models.Meeting](c, "Invites")
+}
+
 // ScheduleMeeting godoc
 //
 // @Summary		 Schedule a meeting
@@ -62,21 +77,6 @@ func ScheduleMeeting(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
-}
-
-// DeleteMeeting godoc
-//
-// @Summary      Deletes a meeting
-// @Description  Deletes a meeting and its invites.
-// @Tags         meetings
-// @Accept       json
-// @Produce      json
-// @Param		 id	path int true "Meeting ID"
-// @Success      204  {object}  nil
-// @Failure      404  {object}  dto.Error
-// @Router       /meetings/{id} [delete]
-func DeleteMeeting(c *gin.Context) {
-	deleteResource[models.Meeting](c, "Invites")
 }
 
 // GetMeetingInvites godoc
