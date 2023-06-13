@@ -107,7 +107,11 @@ func deleteResource[R resource](c *gin.Context, selectQuery interface{}) {
 		return
 	}
 
-	database.DB.Select(selectQuery).Delete(&resource)
+	if selectQuery != nil {
+		database.DB.Select(selectQuery).Delete(&resource)
+	} else {
+		database.DB.Delete(&resource)
+	}
 
 	c.Status(http.StatusNoContent)
 }
