@@ -57,7 +57,7 @@ func ScheduleMeeting(c *gin.Context) {
 		return
 	}
 
-	invites, err := findNestedResources[models.Meeting, models.Invite](c, &meeting, "Invites")
+	invites, err := findNestedResources[models.Invite](c, &meeting, "Invites")
 	if err != nil {
 		return
 	}

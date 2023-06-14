@@ -129,7 +129,7 @@ func GetUserScheduledMeetings(c *gin.Context) {
 		return
 	}
 
-	invites, err := findNestedResources[models.User, models.Invite](c, &user, "Invites")
+	invites, err := findNestedResources[models.Invite](c, &user, "Invites")
 	if err != nil {
 		return
 	}

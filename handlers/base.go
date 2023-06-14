@@ -22,13 +22,13 @@ func getResources[R resource](c *gin.Context) {
 }
 
 // GET /<resource>/:id/<nested_resource>
-func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
+func getNestedResources[RNested, R resource](c *gin.Context, assocName string) {
 	resource, err := findResourceByID[R](c, c.Param("id"))
 	if err != nil {
 		return
 	}
 
-	nestedResources, err := findNestedResources[R, RNested](c, &resource, assocName)
+	nestedResources, err := findNestedResources[RNested](c, &resource, assocName)
 	if err != nil {
 		return
 	}

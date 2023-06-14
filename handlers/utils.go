@@ -27,7 +27,7 @@ func findResourceByID[R resource](c *gin.Context, id interface{}) (resource R, e
 	return resource, nil
 }
 
-func findNestedResources[R, RNested resource](c *gin.Context, resource *R, assocName string) (nestedResources []RNested, err error) {
+func findNestedResources[RNested, R resource](c *gin.Context, resource *R, assocName string) (nestedResources []RNested, err error) {
 	err = database.DB.Model(resource).Association(assocName).Find(&nestedResources)
 	if err != nil {
 		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
