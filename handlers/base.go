@@ -68,9 +68,8 @@ func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *
 
 // DELETE /<resource>/:id
 func deleteResource[R resource](c *gin.Context, selectQuery interface{}) {
-	var resource R
-	if err := database.DB.First(&resource, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
+	resource, err := findResourceByID[R](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
