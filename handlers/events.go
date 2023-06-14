@@ -155,7 +155,7 @@ func JoinEvent(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /events/{id}/participants [get]
 func GetEventParticipants(c *gin.Context) {
-	getNestedResources[models.Event, models.User](c, "Participants")
+	getNestedResources[models.User, models.Event](c, "Participants")
 }
 
 // GetEventMeetings godoc
@@ -170,7 +170,7 @@ func GetEventParticipants(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /events/{id}/meetings [get]
 func GetEventMeetings(c *gin.Context) {
-	getNestedResources[models.Event, models.Meeting](c, "Meetings")
+	getNestedResources[models.Meeting, models.Event](c, "Meetings")
 }
 
 // CreateEventMeeting godoc

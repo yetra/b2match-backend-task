@@ -113,5 +113,5 @@ func DeleteCompany(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /companies/{id}/representatives [get]
 func GetCompanyRepresentatives(c *gin.Context) {
-	getNestedResources[models.Company, models.User](c, "Representatives")
+	getNestedResources[models.User, models.Company](c, "Representatives")
 }

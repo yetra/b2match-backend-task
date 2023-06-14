@@ -162,5 +162,5 @@ func GetUserScheduledMeetings(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /users/{id}/invites [get]
 func GetUserInvites(c *gin.Context) {
-	getNestedResources[models.User, models.Invite](c, "Invites")
+	getNestedResources[models.Invite, models.User](c, "Invites")
 }
