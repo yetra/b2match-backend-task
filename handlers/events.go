@@ -48,8 +48,8 @@ func GetEventByID(c *gin.Context) {
 // @Failure      500 	{object}	dto.Error
 // @Router       /events [post]
 func CreateEvent(c *gin.Context) {
-	var input dto.NewEventJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.NewEventJSON](c)
+	if err != nil {
 		return
 	}
 
@@ -78,13 +78,13 @@ func CreateEvent(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /events/{id} [patch]
 func UpdateEvent(c *gin.Context) {
-	var event models.Event
-	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
+	event, err := findResourceByID[models.Event](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var input dto.UpdateEventJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.UpdateEventJSON](c)
+	if err != nil {
 		return
 	}
 
@@ -119,22 +119,22 @@ func DeleteEvent(c *gin.Context) {
 // @Failure      404  {object}  dto.Error
 // @Router       /events/{id}/join [post]
 func JoinEvent(c *gin.Context) {
-	var event models.Event
-	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
+	event, err := findResourceByID[models.Event](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var input dto.JoinEventJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.JoinEventJSON](c)
+	if err != nil {
 		return
 	}
 
-	var participant models.User
-	if err := findResourceByID(c, &participant, input.ID); err != nil {
+	participant, err := findResourceByID[models.User](c, input.ID)
+	if err != nil {
 		return
 	}
 
-	err := database.DB.Model(&event).Association("Participants").Append(&participant)
+	err = database.DB.Model(&event).Association("Participants").Append(&participant)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, dto.Error{Errors: err.Error()})
 		return
@@ -185,13 +185,13 @@ func GetEventMeetings(c *gin.Context) {
 // @Failure      500 	{object}	dto.Error
 // @Router       /events/{id}/meetings [post]
 func CreateEventMeeting(c *gin.Context) {
-	var input dto.NewMeetingJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.NewMeetingJSON](c)
+	if err != nil {
 		return
 	}
 
-	var event models.Event
-	if err := findResourceByID(c, &event, c.Param("id")); err != nil {
+	event, err := findResourceByID[models.Event](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
@@ -200,8 +200,8 @@ func CreateEventMeeting(c *gin.Context) {
 		return
 	}
 
-	var organizer models.User
-	if err := findResourceByID(c, &organizer, input.OrganizerID); err != nil {
+	organizer, err := findResourceByID[models.User](c, input.OrganizerID)
+	if err != nil {
 		return
 	}
 

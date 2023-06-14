@@ -18,30 +18,30 @@ type inputJSON interface {
 	newResourceJSON | updateResourceJSON | dto.JoinEventJSON
 }
 
-func findResourceByID[R resource](c *gin.Context, resource *R, id interface{}) error {
-	if err := database.DB.First(resource, id).Error; err != nil {
+func findResourceByID[R resource](c *gin.Context, id interface{}) (resource R, err error) {
+	if err := database.DB.First(&resource, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
-		return err
+		return resource, err
 	}
 
-	return nil
+	return resource, nil
 }
 
-func findNestedResources[R, RNested resource](c *gin.Context, resource *R, nestedResources *[]RNested, assocName string) error {
-	err := database.DB.Model(resource).Association(assocName).Find(nestedResources)
+func findNestedResources[R, RNested resource](c *gin.Context, resource *R, assocName string) (nestedResources []RNested, err error) {
+	err = database.DB.Model(resource).Association(assocName).Find(&nestedResources)
 	if err != nil {
 		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
-		return err
+		return nestedResources, err
 	}
 
-	return nil
+	return nestedResources, nil
 }
 
-func bindJSON[J inputJSON](c *gin.Context, input *J) error {
-	if err := c.ShouldBindJSON(input); err != nil {
+func bindJSON[J inputJSON](c *gin.Context) (input J, err error) {
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, dto.Error{Errors: err.Error()})
-		return err
+		return input, err
 	}
 
-	return nil
+	return input, nil
 }

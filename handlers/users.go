@@ -47,13 +47,13 @@ func GetUserByID(c *gin.Context) {
 // @Failure      500 	{object}	dto.Error
 // @Router       /users [post]
 func CreateUser(c *gin.Context) {
-	var input dto.NewUserJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.NewUserJSON](c)
+	if err != nil {
 		return
 	}
 
-	var company models.Company
-	if err := findResourceByID(c, &company, input.CompanyID); err != nil {
+	company, err := findResourceByID[models.Company](c, input.CompanyID)
+	if err != nil {
 		return
 	}
 
@@ -84,13 +84,13 @@ func CreateUser(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /users/{id} [patch]
 func UpdateUser(c *gin.Context) {
-	var user models.User
-	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
+	user, err := findResourceByID[models.User](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var input dto.UpdateUserJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.UpdateUserJSON](c)
+	if err != nil {
 		return
 	}
 
@@ -124,21 +124,21 @@ func DeleteUser(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /users/{id}/scheduled-meetings [get]
 func GetUserScheduledMeetings(c *gin.Context) {
-	var user models.User
-	if err := findResourceByID(c, &user, c.Param("id")); err != nil {
+	user, err := findResourceByID[models.User](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var invites []models.Invite
-	if err := findNestedResources(c, &user, &invites, "Invites"); err != nil {
+	invites, err := findNestedResources[models.User, models.Invite](c, &user, "Invites")
+	if err != nil {
 		return
 	}
 
 	var scheduledMeetings []models.Meeting
 	for _, invite := range invites {
 
-		var meeting models.Meeting
-		if err := findResourceByID(c, &meeting, invite.MeetingID); err != nil {
+		meeting, err := findResourceByID[models.Meeting](c, invite.MeetingID)
+		if err != nil {
 			return
 		}
 

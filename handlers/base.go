@@ -23,13 +23,13 @@ func getResources[R resource](c *gin.Context) {
 
 // GET /<resource>/:id/<nested_resource>
 func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
-	var resource R
-	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
+	resource, err := findResourceByID[R](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var nestedResources []RNested
-	if err := findNestedResources(c, &resource, &nestedResources, assocName); err != nil {
+	nestedResources, err := findNestedResources[R, RNested](c, &resource, assocName)
+	if err != nil {
 		return
 	}
 
@@ -38,8 +38,8 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 
 // GET /<resource>/:id
 func getResourceByID[R resource](c *gin.Context) {
-	var resource R
-	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
+	resource, err := findResourceByID[R](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
