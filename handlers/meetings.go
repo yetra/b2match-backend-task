@@ -62,12 +62,9 @@ func ScheduleMeeting(c *gin.Context) {
 		return
 	}
 
-	for _, invite := range invites {
-		if invite.Status != models.StatusAccepted {
-			err_message := "found an invite of status Pending or Rejected"
-			c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err_message})
-			return
-		}
+	if err := checkAllMeetingInvitesAccepted(invites); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
+		return
 	}
 
 	err = database.DB.Model(&meeting).Update("Scheduled", true).Error

@@ -23,6 +23,16 @@ func checkMeetingNotAlreadyScheduled(meeting models.Meeting) error {
 	return nil
 }
 
+func checkAllMeetingInvitesAccepted(invites []models.Invite) error {
+	for _, invite := range invites {
+		if invite.Status != models.StatusAccepted {
+			return errors.New("found an invite of status Pending or Rejected")
+		}
+	}
+
+	return nil
+}
+
 func checkInviteeIsNotOrganizer(inviteeID uint, organizerID uint) error {
 	if inviteeID == organizerID {
 		return errors.New("cannot invite the meeting organizer")
