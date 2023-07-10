@@ -45,8 +45,8 @@ func GetCompanyByID(c *gin.Context) {
 // @Failure      500 	{object}	dto.Error
 // @Router       /companies [post]
 func CreateCompany(c *gin.Context) {
-	var input dto.NewCompanyJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.NewCompanyJSON](c)
+	if err != nil {
 		return
 	}
 
@@ -73,13 +73,13 @@ func CreateCompany(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /companies/{id} [patch]
 func UpdateCompany(c *gin.Context) {
-	var company models.Company
-	if err := findResourceByID(c, &company, c.Param("id")); err != nil {
+	company, err := findResourceByID[models.Company](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var input dto.UpdateCompanyJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.UpdateCompanyJSON](c)
+	if err != nil {
 		return
 	}
 
@@ -113,5 +113,5 @@ func DeleteCompany(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /companies/{id}/representatives [get]
 func GetCompanyRepresentatives(c *gin.Context) {
-	getNestedResources[models.Company, models.User](c, "Representatives")
+	getNestedResources[models.User, models.Company](c, "Representatives")
 }

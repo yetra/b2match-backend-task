@@ -52,25 +52,22 @@ func DeleteMeeting(c *gin.Context) {
 // @Failure		 422	{object}	dto.Error
 // @Router		 /meetings/{id}/schedule [patch]
 func ScheduleMeeting(c *gin.Context) {
-	var meeting models.Meeting
-	if err := findResourceByID(c, &meeting, c.Param("id")); err != nil {
+	meeting, err := findResourceByID[models.Meeting](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var invites []models.Invite
-	if err := findNestedResources(c, &meeting, &invites, "Invites"); err != nil {
+	invites, err := findNestedResources[models.Invite](c, &meeting, "Invites")
+	if err != nil {
 		return
 	}
 
-	for _, invite := range invites {
-		if invite.Status != models.StatusAccepted {
-			err_message := "found an invite of status Pending or Rejected"
-			c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err_message})
-			return
-		}
+	if err := checkAllMeetingInvitesAccepted(invites); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, dto.Error{Errors: err.Error()})
+		return
 	}
 
-	err := database.DB.Model(&meeting).Update("Scheduled", true).Error
+	err = database.DB.Model(&meeting).Update("Scheduled", true).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, dto.Error{Errors: err.Error()})
 		return
@@ -91,7 +88,7 @@ func ScheduleMeeting(c *gin.Context) {
 // @Failure      500	{object}	dto.Error
 // @Router       /meetings/{id}/invites [get]
 func GetMeetingInvites(c *gin.Context) {
-	getNestedResources[models.Meeting, models.Invite](c, "Invites")
+	getNestedResources[models.Invite, models.Meeting](c, "Invites")
 }
 
 // CreateMeetingInvite godoc
@@ -106,13 +103,13 @@ func GetMeetingInvites(c *gin.Context) {
 // @Failure      500 	{object}	dto.Error
 // @Router       /meeting/{id}/invites [post]
 func CreateMeetingInvite(c *gin.Context) {
-	var input dto.NewInviteJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.NewInviteJSON](c)
+	if err != nil {
 		return
 	}
 
-	var meeting models.Meeting
-	if err := findResourceByID(c, &meeting, c.Param("id")); err != nil {
+	meeting, err := findResourceByID[models.Meeting](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
@@ -121,8 +118,8 @@ func CreateMeetingInvite(c *gin.Context) {
 		return
 	}
 
-	var invitee models.User
-	if err := findResourceByID(c, &invitee, input.InviteeID); err != nil {
+	invitee, err := findResourceByID[models.User](c, input.InviteeID)
+	if err != nil {
 		return
 	}
 

@@ -22,14 +22,14 @@ func getResources[R resource](c *gin.Context) {
 }
 
 // GET /<resource>/:id/<nested_resource>
-func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
-	var resource R
-	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
+func getNestedResources[RNested, R resource](c *gin.Context, assocName string) {
+	resource, err := findResourceByID[R](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var nestedResources []RNested
-	if err := findNestedResources(c, &resource, &nestedResources, assocName); err != nil {
+	nestedResources, err := findNestedResources[RNested](c, &resource, assocName)
+	if err != nil {
 		return
 	}
 
@@ -38,8 +38,8 @@ func getNestedResources[R, RNested resource](c *gin.Context, assocName string) {
 
 // GET /<resource>/:id
 func getResourceByID[R resource](c *gin.Context) {
-	var resource R
-	if err := findResourceByID(c, &resource, c.Param("id")); err != nil {
+	resource, err := findResourceByID[R](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
@@ -68,9 +68,8 @@ func updateResource[R resource, J updateResourceJSON](c *gin.Context, resource *
 
 // DELETE /<resource>/:id
 func deleteResource[R resource](c *gin.Context, selectQuery interface{}) {
-	var resource R
-	if err := database.DB.First(&resource, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusNotFound, dto.Error{Errors: err.Error()})
+	resource, err := findResourceByID[R](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 

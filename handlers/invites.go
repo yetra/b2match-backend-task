@@ -50,18 +50,18 @@ func DeleteInvite(c *gin.Context) {
 // @Failure		 422	{object}	dto.Error
 // @Router		 /invites/{id}/rsvp [patch]
 func RespondToInvite(c *gin.Context) {
-	var input dto.RSVPJSON
-	if err := bindJSON(c, &input); err != nil {
+	input, err := bindJSON[dto.RSVPJSON](c)
+	if err != nil {
 		return
 	}
 
-	var invite models.Invite
-	if err := findResourceByID(c, &invite, c.Param("id")); err != nil {
+	invite, err := findResourceByID[models.Invite](c, c.Param("id"))
+	if err != nil {
 		return
 	}
 
-	var meeting models.Meeting
-	if err := findResourceByID(c, &meeting, invite.MeetingID); err != nil {
+	meeting, err := findResourceByID[models.Meeting](c, invite.MeetingID)
+	if err != nil {
 		return
 	}
 
